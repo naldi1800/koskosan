@@ -1,0 +1,36 @@
+name: koskosan
+version: 1.0.0+1
+publish_to: none
+description: Mempermudah dalam mencari kos kosan
+environment: 
+  sdk: '>=2.18.2 <3.0.0'
+
+dependencies: 
+  cupertino_icons: ^1.0.2
+  material_design_icons_flutter: 6.0.7096
+  get: 4.6.5
+  intl: 0.17.0
+  cloud_firestore: 4.3.1
+  firebase_core: 2.4.1
+  flutter_session_manager: 1.0.3
+  firebase_auth: 4.2.5
+  google_sign_in: 5.4.3
+  email_validator: 2.1.17
+  get_storage: 2.0.3
+  url_launcher: 6.1.8
+  google_maps_flutter: 2.2.3
+  firebase_storage: 11.0.10
+  file_picker: 5.2.5
+  google_maps_flutter_platform_interface: 2.2.5
+  location: 4.4.0
+  flutter: 
+    sdk: flutter
+
+dev_dependencies: 
+  flutter_lints: ^2.0.0
+  flutter_test: 
+    sdk: flutter
+
+flutter: 
+  uses-material-design: true
+

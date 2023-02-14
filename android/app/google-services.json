@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "702393921072",
+    "project_id": "kos-kosan-1",
+    "storage_bucket": "kos-kosan-1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:702393921072:android:acd6dd7cb787612e6707f5",
+        "android_client_info": {
+          "package_name": "com.example.koskosan"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "702393921072-340tghhl2bf0a9ruobj7f4t1dvj6gmba.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfCx6mGHxI-N09gGLz30fn4-bcasR7OTg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "702393921072-340tghhl2bf0a9ruobj7f4t1dvj6gmba.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
