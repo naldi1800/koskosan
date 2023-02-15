@@ -10,6 +10,7 @@ abstract class Routes {
   static const GALLERI_ITEM = _Paths.GALLERI_ITEM;
   static const MAPS = _Paths.MAPS;
   static const MAPS_CAMPUS = _Paths.MAPS_CAMPUS;
+  static const LIST_CAMPUS = _Paths.LIST_CAMPUS;
 }
 
 abstract class _Paths {
@@ -21,4 +22,5 @@ abstract class _Paths {
   static const GALLERI_ITEM = '/galleri-item';
   static const MAPS = '/maps';
   static const MAPS_CAMPUS = '/maps-campus';
+  static const LIST_CAMPUS = '/list-campus';
 }

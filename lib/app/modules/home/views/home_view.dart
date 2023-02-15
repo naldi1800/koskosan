@@ -49,50 +49,130 @@ class HomeView extends GetView<HomeController> {
                                       Padding(
                                         padding: const EdgeInsets.all(5),
                                         child: Row(
-                                          children: const [
-                                            Text(
+                                          children: [
+                                            const Text(
                                               "Location",
                                               style: TextStyle(
                                                   color: UI.object,
                                                   fontSize: 12),
                                             ),
-                                            Icon(
-                                              Icons.keyboard_arrow_down,
-                                              color: UI.object,
-                                              size: 20,
+                                            Obx(
+                                              () => PopupMenuButton(
+                                                itemBuilder: (context) {
+                                                  return [
+                                                    const PopupMenuItem(
+                                                      value: 1,
+                                                      child: Text(
+                                                        "My location",
+                                                        style: TextStyle(
+                                                            fontSize: 17,
+                                                            color: UI.object),
+                                                      ),
+                                                    ),
+                                                    const PopupMenuItem(
+                                                      value: 2,
+                                                      child: Text(
+                                                        "Makassar",
+                                                        style: TextStyle(
+                                                            fontSize: 17,
+                                                            color: UI.object),
+                                                      ),
+                                                    ),
+                                                  ];
+                                                },
+                                                onSelected: (v) {
+                                                  controller.locText.value =
+                                                      v == 1
+                                                          ? "My Location"
+                                                          : "Makassar";
+                                                  controller.locTextInitial
+                                                      .value = v == 1 ? 1 : 2;
+                                                },
+                                                initialValue: controller
+                                                    .locTextInitial.value,
+                                                color: UI.foreground,
+                                                icon: const Icon(
+                                                  Icons.keyboard_arrow_down,
+                                                  color: UI.object,
+                                                  size: 20,
+                                                ),
+                                              ),
                                             ),
                                           ],
                                         ),
                                       ),
                                       Row(
-                                        children: const [
-                                          Icon(
+                                        children: [
+                                          const Icon(
                                             Icons.location_on,
                                             size: 30,
                                             color: UI.action,
                                           ),
-                                          Text(
-                                            "Makassar, Indonesia",
-                                            style: TextStyle(
-                                                color: UI.object, fontSize: 15),
+                                          Obx(
+                                            () => Text(
+                                              controller.locText.value,
+                                              style: const TextStyle(
+                                                color: UI.object,
+                                                fontSize: 15,
+                                              ),
+                                            ),
                                           ),
                                         ],
                                       ),
                                     ],
                                   ),
                                 ),
-                                Container(
-                                  width: 50,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(17),
-                                      color: UI.foreground2),
-                                  child: const Icon(
-                                    CupertinoIcons.bell_fill,
-                                    size: 25,
-                                    color: UI.action,
+                                PopupMenuButton(
+                                  icon: const Icon(
+                                    Icons.more_vert,
+                                    color: UI.object,
                                   ),
+                                  color: UI.foreground,
+                                  itemBuilder: (context) {
+                                    return [
+                                      PopupMenuItem(
+                                        value: 1,
+                                        child: popItem("Login", Icons.login),
+                                      ),
+                                      PopupMenuItem(
+                                        value: 2,
+                                        child: popItem(
+                                            "About", Icons.info_outline),
+                                      ),
+                                      PopupMenuItem(
+                                        value: 3,
+                                        child:
+                                            popItem("Exit", Icons.exit_to_app),
+                                      ),
+                                    ];
+                                  },
+                                  onSelected: (v) {
+                                    switch (v) {
+                                      case 1:
+                                        Get.toNamed(Routes.LOGIN);
+                                        break;
+                                      case 3:
+                                        Get.back();
+                                        break;
+                                    }
+                                  },
                                 ),
+                                // GestureDetector(
+                                //   onTap: (){
+                                //   },
+                                //   child: const SizedBox(
+                                //     width: 50,
+                                //     height: 50,
+                                //     // decoration: BoxDecoration(
+                                //     //     borderRadius: BorderRadius.circular(17),
+                                //     //     color: UI.foreground2),
+                                //     child: Icon(
+                                //       Icons.more_vert,
+                                //       size: 25,
+                                //       color: UI.object,
+                                //     ),
+                                //   ),
+                                // ),
                               ],
                             ),
                           ),
@@ -140,20 +220,21 @@ class HomeView extends GetView<HomeController> {
                           Padding(
                             padding: const EdgeInsets.only(left: 20, right: 20),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 itemCategory(
                                   context,
                                   "Kampus",
                                   CupertinoIcons.building_2_fill,
-                                  () {},
+                                  () => Get.toNamed(Routes.LIST_CAMPUS),
                                 ),
-                                itemCategory(
-                                  context,
-                                  "Favorite",
-                                  Icons.favorite,
-                                  () {},
-                                ),
+                                const SizedBox(width: 20),
+                                // itemCategory(
+                                //   context,
+                                //   "Favorite",
+                                //   Icons.favorite,
+                                //   () {},
+                                // ),
                                 itemCategory(
                                   context,
                                   "Terdekat",
@@ -179,6 +260,28 @@ class HomeView extends GetView<HomeController> {
           ],
         ),
       ),
+    );
+  }
+
+  Row popItem(String title, IconData icon) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Icon(
+          icon,
+          color: UI.object,
+        ),
+        const SizedBox(
+          width: 7,
+        ),
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 17,
+            color: UI.object,
+          ),
+        ),
+      ],
     );
   }
 
@@ -356,7 +459,7 @@ class HomeView extends GetView<HomeController> {
         children: [
           //Item Picture
           Container(
-            height: size.height * 0.17,
+            height: (250 - 20) / 2,
             width: double.infinity,
             decoration: BoxDecoration(
               color: UI.foreground,
@@ -416,19 +519,23 @@ class HomeView extends GetView<HomeController> {
                       ),
                       Expanded(
                         flex: 1,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                              FUNC.convertToK(priceMin),
-                              style: const TextStyle(
-                                  fontSize: 15, color: UI.action),
-                            ),
-                            const Text(
-                              " /bln",
-                              style: TextStyle(fontSize: 15, color: UI.object),
-                            ),
-                          ],
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                FUNC.convertToK(priceMin),
+                                style: const TextStyle(
+                                    fontSize: 15, color: UI.action),
+                              ),
+                              const Text(
+                                " /bln",
+                                style:
+                                    TextStyle(fontSize: 15, color: UI.object),
+                              ),
+                            ],
+                          ),
                         ),
                       )
                     ],

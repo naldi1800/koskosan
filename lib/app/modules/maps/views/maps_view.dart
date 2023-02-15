@@ -21,7 +21,7 @@ class MapsView extends GetView<MapsController> {
             stream: controller.getAllData(Get.arguments),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.active) {
-                var undipa = const LatLng(-5.1404505, 119.4898208);
+                // var undipa = const LatLng(-5.1404505, 119.4898208);
                 List<Marker> marker = [];
                 var markerLength = 0.obs;
                 var getData = snapshot.data;
@@ -210,4 +210,5 @@ class MapsView extends GetView<MapsController> {
       ),
     );
   }
+
 }

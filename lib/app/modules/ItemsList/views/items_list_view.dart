@@ -82,15 +82,14 @@ class ItemsListView extends GetView<ItemsListController> {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.active) {
-                          var data = snapshot.data!.docs;
+                          var getData = snapshot.data!.docs;
                           return ListView.builder(
-                            itemCount: 5,
-                            // separatorBuilder: (context, index) {
-                            //   return const SizedBox(height: 20);
-                            // },
+                            itemCount: getData.length,
                             itemBuilder: (context, index) {
+                              var d =
+                                  getData[index].data() as Map<String, dynamic>;
                               return GestureDetector(
-                                onTap: (){},
+                                onTap: () {},
                                 child: Column(
                                   children: [
                                     index == 0
@@ -136,37 +135,13 @@ class ItemsListView extends GetView<ItemsListController> {
                                               horizontal: 15,
                                               vertical: 5,
                                             ),
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceBetween,
-                                              children: const [
-                                                Expanded(
-                                                  child: Text(
-                                                    "Kos Haji Asis",
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    maxLines: 2,
-                                                    style: TextStyle(
-                                                        fontSize: 20,
-                                                        color: UI.object),
-                                                  ),
-                                                ),
-                                                Text(
-                                                  "500K",
-                                                  style: TextStyle(
-                                                    color: UI.action,
-                                                    fontSize: 17,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  " /bln",
-                                                  style: TextStyle(
-                                                    color: UI.object,
-                                                    fontSize: 17,
-                                                  ),
-                                                ),
-                                              ],
+                                            child: Text(
+                                              d['name'],
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 2,
+                                              style: const TextStyle(
+                                                  fontSize: 20,
+                                                  color: UI.object),
                                             ),
                                           ),
                                           Padding(

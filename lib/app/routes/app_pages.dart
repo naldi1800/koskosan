@@ -8,6 +8,8 @@ import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/item_detail/bindings/item_detail_binding.dart';
 import '../modules/item_detail/views/item_detail_view.dart';
+import '../modules/list_campus/bindings/list_campus_binding.dart';
+import '../modules/list_campus/views/list_campus_view.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
 import '../modules/maps/bindings/maps_binding.dart';
@@ -58,6 +60,11 @@ class AppPages {
       name: _Paths.MAPS_CAMPUS,
       page: () => const MapsCampusView(),
       binding: MapsCampusBinding(),
+    ),
+    GetPage(
+      name: _Paths.LIST_CAMPUS,
+      page: () => const ListCampusView(),
+      binding: ListCampusBinding(),
     ),
   ];
 }

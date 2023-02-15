@@ -16,7 +16,7 @@ class ItemDetailView extends GetView<ItemDetailController> {
   @override
   Widget build(BuildContext context) {
     var padding = const EdgeInsets.symmetric(horizontal: 20);
-
+    // print("Data : ${Get.parameters['in']}");
     return Scaffold(
       backgroundColor: UI.background,
       body: Stack(
@@ -65,6 +65,7 @@ class ItemDetailView extends GetView<ItemDetailController> {
                 var regulation = data['requlations'];
 
                 controller.getDataImage(Get.arguments);
+                controller.getCampusDistance(location);
 
                 return SingleChildScrollView(
                   child: Column(
@@ -112,6 +113,7 @@ class ItemDetailView extends GetView<ItemDetailController> {
                         ),
                       ),
                       const SizedBox(height: 20),
+
                       // Address
                       Container(
                         padding: padding,
@@ -138,6 +140,7 @@ class ItemDetailView extends GetView<ItemDetailController> {
                         ),
                       ),
                       const SizedBox(height: 20),
+
                       // Spec
                       Container(
                         padding: padding,
@@ -169,6 +172,7 @@ class ItemDetailView extends GetView<ItemDetailController> {
                         ),
                       ),
                       const SizedBox(height: 20),
+
                       // Owner
                       Container(
                         padding: padding,
@@ -259,6 +263,7 @@ class ItemDetailView extends GetView<ItemDetailController> {
                         ),
                       ),
                       const SizedBox(height: 20),
+
                       // Description
                       Container(
                         padding: padding,
@@ -298,8 +303,10 @@ class ItemDetailView extends GetView<ItemDetailController> {
                           () => (controller.galeryLenght.value != 0)
                               ? GestureDetector(
                                   onTap: () {
-                                    Get.toNamed(Routes.GALLERI_ITEM,
-                                        arguments: "vzu14XPbovaxnQTkETA3");
+                                    Get.toNamed(
+                                      Routes.GALLERI_ITEM,
+                                      arguments: Get.arguments,
+                                    );
                                   },
                                   child: SingleChildScrollView(
                                     scrollDirection: Axis.horizontal,
@@ -380,11 +387,12 @@ class ItemDetailView extends GetView<ItemDetailController> {
                         ),
                       ),
                       const SizedBox(height: 20),
+
                       // Nearest
                       Container(
                         padding: padding,
                         child: const Text(
-                          "Dekat dengan",
+                          "Kampus terdekat (Jarak < 3 km)",
                           style: TextStyle(
                             color: UI.object,
                             fontSize: 20,
@@ -394,10 +402,24 @@ class ItemDetailView extends GetView<ItemDetailController> {
                       const SizedBox(height: 10),
                       Container(
                         padding: padding,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: List.generate(
-                              nearests.length, (i) => info(nearests[i])),
+                        child: Obx(
+                          () => Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: (controller.nearestLength.value > 0)
+                                ? List.generate(controller.nearest.length, (i) {
+                                    var dx = controller.nearest;
+                                    return Column(
+                                      children: [
+                                        near(
+                                          dx[i].value['title'],
+                                          dx[i].value['value'],
+                                        ),
+                                        const SizedBox(height: 5),
+                                      ],
+                                    );
+                                  })
+                                : [],
+                          ),
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -600,7 +622,14 @@ class ItemDetailView extends GetView<ItemDetailController> {
                 children: [
                   IconButton(
                     onPressed: () {
-                      Get.back();
+                      if (Get.parameters['in'] == null) {
+                        Get.offAndToNamed(Routes.HOME);
+                      } else {
+                        Get.offAndToNamed(
+                          Routes.MAPS_CAMPUS,
+                          arguments: Get.parameters['in'],
+                        );
+                      }
                     },
                     icon: const Icon(
                       Icons.arrow_back_sharp,
@@ -611,7 +640,7 @@ class ItemDetailView extends GetView<ItemDetailController> {
                     () => GestureDetector(
                       onTap: () => controller.setFavorite(
                         context,
-                        "vzu14XPbovaxnQTkETA3",
+                        Get.arguments,
                       ),
                       child: Container(
                         decoration: const BoxDecoration(
@@ -724,15 +753,16 @@ class ItemDetailView extends GetView<ItemDetailController> {
 
   Row near(String title, String value) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           title,
-          style: const TextStyle(fontSize: 17, color: UI.object),
+          style: const TextStyle(fontSize: 17, color: Colors.grey),
         ),
         const SizedBox(width: 7),
         Text(
-          title,
-          style: const TextStyle(fontSize: 15, color: Colors.grey),
+          value,
+          style: const TextStyle(fontSize: 15, color: UI.action),
         )
       ],
     );

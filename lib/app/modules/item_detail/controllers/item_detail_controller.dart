@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:koskosan/app/Utils/Func.dart';
 
 class ItemDetailController extends GetxController {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -16,6 +17,10 @@ class ItemDetailController extends GetxController {
   var spec = 0.obs;
   final imageMain = Rx<Uint8List>(Uint8List(0));
   final galeryLenght = 0.obs;
+
+  List<Rx<Map<String, dynamic>>> nearest = [];
+  var nearestLength = 0.obs;
+
   List<Rx<Uint8List>> galery = [];
   var box = GetStorage('USER_SETTINGS');
   var favorite = false.obs;
@@ -34,7 +39,7 @@ class ItemDetailController extends GetxController {
       (e) async {
         var dt = await e.getData();
         galery.add(dt!.obs);
-        print("Galeri Add");
+        // print("Galeri Add");
         galeryLenght.value = galery.length;
       },
     );
@@ -68,6 +73,40 @@ class ItemDetailController extends GetxController {
     );
   }
 
+  void getCampusDistance(LatLng location) async {
+    nearest = [];
+    nearestLength.value = 0;
+
+    await firestore.collection("campus").get().then(
+          (v) => v.docs.forEach(
+            (e) {
+              var d = e.data();
+              GeoPoint geo = d['location'];
+              LatLng locCampus = LatLng(geo.latitude, geo.longitude);
+              var dis = FUNC.getDistanceOfLine(location, locCampus);
+              dis *= 100;
+              dis = double.parse(dis.toStringAsFixed(2));
+              var va = dis < 1 ? "${(dis * 1000).toInt()} m" : "$dis km";
+              // print(va);
+              if (dis <= 3) {
+                nearest.add(
+                  Rx<Map<String, dynamic>>(
+                    {
+                      "title": d['abbreviation'],
+                      "value": va,
+                      "distance": dis,
+                    },
+                  ),
+                );
+              }
+            },
+          ),
+        );
+    nearest.sort((a, b) => a.value["distance"].compareTo(b.value["distance"]));
+    nearestLength.value = nearest.length;
+    // print("data cek : ${nearest}");
+  }
+
   @override
   void onInit() async {
     mapController = Completer();
@@ -81,6 +120,5 @@ class ItemDetailController extends GetxController {
   @override
   void onClose() {
     super.onClose();
-    // mapController.complete().dispose();
   }
 }
