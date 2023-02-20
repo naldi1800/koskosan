@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 class LoginController extends GetxController {
   late TextEditingController emailC;
   late TextEditingController passC;
+  var showPass = true.obs;
 
   @override
   void onInit() {

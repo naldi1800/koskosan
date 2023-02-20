@@ -25,19 +25,11 @@ class MapsView extends GetView<MapsController> {
                 List<Marker> marker = [];
                 var markerLength = 0.obs;
                 var getData = snapshot.data;
-                // print(
-                //   "FUNC ${FUNC.getDistanceOfLine(
-                //     const LatLng(2, 3),
-                //     const LatLng(4, 1),
-                //   )}",
-                // );
-
-                // getData.forEach((e) async {
                 var data = getData!.data() as Map<String, dynamic>;
                 GeoPoint geo = data['position'];
                 LatLng location = LatLng(geo.latitude, geo.longitude);
                 var mar = Marker(
-                  markerId: MarkerId(getData[0].id),
+                  markerId: MarkerId(getData.id),
                   position: location,
                   icon: BitmapDescriptor.defaultMarkerWithHue(
                       BitmapDescriptor.hueAzure),
@@ -45,7 +37,7 @@ class MapsView extends GetView<MapsController> {
                     title: data['name'].toString(),
                     onTap: () => Get.offNamed(
                       Routes.ITEM_DETAIL,
-                      arguments: getData[0].id,
+                      arguments: getData.id,
                     ),
                   ),
                 );
@@ -206,6 +198,7 @@ class MapsView extends GetView<MapsController> {
               ),
             ),
           ),
+        
         ],
       ),
     );

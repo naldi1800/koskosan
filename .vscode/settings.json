@@ -3,7 +3,11 @@
         "cupertino",
         "Firestore",
         "Getx",
+        "kampus",
         "koskosan",
+        "Lokasi",
+        "singkatan",
+        "Tambah",
         "Universitas"
     ]
 }

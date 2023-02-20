@@ -1,12 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:koskosan/app/Utils/UI.dart';
-import 'package:koskosan/app/routes/app_pages.dart';
 
-class Menu {
-  static Widget menu(height, int menuActive) {
+class Menu_Controller extends GetxController {
+  Widget menu(height, int menuActive) {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
@@ -24,21 +22,21 @@ class Menu {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             GestureDetector(
-              onTap: () => to(1),
+              // onTap: to(1),
               child: menuItem(
                 active: (menuActive == 1),
-                icon: Icons.map,
+                icon: Icons.search,
               ),
             ),
             GestureDetector(
-              onTap: () => to(2),
+              // onTap: to(2),
               child: menuItem(
                 active: (menuActive == 2),
                 icon: Icons.home,
               ),
             ),
             GestureDetector(
-              onTap: () => to(3),
+              // onTap: to(3),
               child: menuItem(
                 active: (menuActive == 3),
                 icon: Icons.favorite,
@@ -50,7 +48,7 @@ class Menu {
     );
   }
 
-  static Container menuItem({
+  Container menuItem({
     required bool active,
     required IconData icon,
   }) {
@@ -69,20 +67,20 @@ class Menu {
     );
   }
 
-  static void to(int to) {
-    // print("Tombol: $to");
+  void to(int to) {
+    print("Tombol: $to");
 
     // return;
-    switch (to) {
-      case 1:
-        Get.toNamed(Routes.ITEM_SEARCH);
-        break;
-      case 2:
-        Get.toNamed(Routes.HOME);
-        break;
-      case 3:
-        Get.toNamed(Routes.ITEM_FAVORITE);
-        break;
-    }
+    // switch (to) {
+    //   case 1:
+    //     Get.toNamed(Routes.ITEM_SEARCH);
+    //     break;
+    //   case 2:
+    //     Get.toNamed(Routes.HOME);
+    //     break;
+    //   case 3:
+    //     Get.toNamed(Routes.ITEM_FAVORITE);
+    //     break;
+    // }
   }
 }

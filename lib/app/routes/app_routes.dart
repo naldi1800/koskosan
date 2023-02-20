@@ -11,6 +11,13 @@ abstract class Routes {
   static const MAPS = _Paths.MAPS;
   static const MAPS_CAMPUS = _Paths.MAPS_CAMPUS;
   static const LIST_CAMPUS = _Paths.LIST_CAMPUS;
+  static const ITEM_FAVORITE = _Paths.ITEM_FAVORITE;
+  static const ITEM_SEARCH = _Paths.ITEM_SEARCH;
+  static const ADMIN_HOME = _Paths.ADMIN_HOME;
+  static const ADMIN_CAMPUS = _Paths.ADMIN_CAMPUS;
+  static const ADMIN_CAMPUS_ADD = _Paths.ADMIN_CAMPUS_ADD;
+  static const ADMIN_KOS = _Paths.ADMIN_KOS;
+  static const ADMIN_KOS_ADD = _Paths.ADMIN_KOS_ADD;
 }
 
 abstract class _Paths {
@@ -23,4 +30,11 @@ abstract class _Paths {
   static const MAPS = '/maps';
   static const MAPS_CAMPUS = '/maps-campus';
   static const LIST_CAMPUS = '/list-campus';
+  static const ITEM_FAVORITE = '/item-favorite';
+  static const ITEM_SEARCH = '/item-search';
+  static const ADMIN_HOME = '/admin-home';
+  static const ADMIN_CAMPUS = '/admin-campus';
+  static const ADMIN_CAMPUS_ADD = '/admin-campus-add';
+  static const ADMIN_KOS = '/admin-kos';
+  static const ADMIN_KOS_ADD = '/admin-kos-add';
 }

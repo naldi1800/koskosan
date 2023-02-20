@@ -1,22 +1,18 @@
-import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:koskosan/app/Utils/Func.dart';
 import 'package:koskosan/app/Utils/UI.dart';
 import 'package:koskosan/app/routes/app_pages.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
 
-class HomeController extends GetxController {
+class ItemFavoriteController extends GetxController {
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  FirebaseStorage storage = FirebaseStorage.instance;
   late GetStorage box;
-  late TextEditingController search;
-  var panelController = PanelController();
 
   Map<String, Rx<Uint8List>> imageMain = {};
   Map<String, Rx<bool>> favorite = {};
@@ -27,30 +23,50 @@ class HomeController extends GetxController {
   var distLength = 0.obs;
   var distNameOfCampusLength = 0.obs;
 
-  var locText = "Makassar".obs;
-  var locTextInitial = 2.obs;
+  var viewItem = false.obs;
+  Rx<Map<String, dynamic>> itemRemoveView = Rx<Map<String, dynamic>>({});
 
-  Rx<List<Widget>> itemsCampus = Rx<List<Widget>>([]);
-
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
-  FirebaseStorage storage = FirebaseStorage.instance;
-
-  @override
-  void onInit() {
-    super.onInit();
-    search = TextEditingController();
-    box = GetStorage("USER_SETTINGS");
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-    search.dispose();
-  }
+  var isRefresh = false.obs;
 
   Stream<QuerySnapshot<Object?>> getAllData() {
     var get = firestore.collection("boardings");
     return get.snapshots();
+  }
+
+  void getLike(String key) async {
+    favoriteLength = 0.obs;
+    var x = box.read(key) ?? false;
+    favorite[key] = Rx<bool>(x);
+    favoriteLength.value = favorite.length;
+  }
+
+  @override
+  void onInit() {
+    super.onInit();
+    box = GetStorage("USER_SETTINGS");
+  }
+
+  void cancelRemoveFromFavorite() {
+    if (viewItem.value) {
+      viewItem.value = false;
+      itemRemoveView = Rx<Map<String, dynamic>>({});
+    }
+  }
+
+  void removeFromFavorite(id, data, priceMin, cat, radius) {
+    if (viewItem.value) {
+      viewItem.value = false;
+      itemRemoveView = Rx<Map<String, dynamic>>({});
+    } else {
+      viewItem.value = true;
+      itemRemoveView.value = {
+        "id": id,
+        "data": data,
+        "price": priceMin,
+        "cat": cat,
+        "radius": radius,
+      };
+    }
   }
 
   void getDataImage(String docID) async {
@@ -61,20 +77,32 @@ class HomeController extends GetxController {
     imageLength.value = imageMain.length;
   }
 
-  void likeSet(String key) async {
+  void likeSet() async {
+    isRefresh.value = true;
+    String key = itemRemoveView.value["id"];
     favoriteLength.value = 0;
     var x = box.read(key) ?? false;
     await box.write(key, !x);
     favorite[key] = Rx<bool>(box.read(key));
     favoriteLength.value = favorite.length;
-    print("Tes $x");
+    itemRemoveView.value = {};
+    viewItem.value = false;
+    isRefresh.value = false;
+    Get.offAndToNamed(Routes.HOME);
   }
 
-  void getLike(String key) async {
-    favoriteLength = 0.obs;
-    var x = box.read(key) ?? false;
-    favorite[key] = Rx<bool>(x);
-    favoriteLength.value = favorite.length;
+  Container category(title) {
+    return Container(
+      // width: ,
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25),
+          border: Border.all(width: 1, color: UI.action)),
+      child: Text(
+        title,
+        style: const TextStyle(fontSize: 8, color: UI.action),
+      ),
+    );
   }
 
   void getDistance(String docID, LatLng pos) async {

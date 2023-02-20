@@ -47,22 +47,22 @@ class ListCampusView extends GetView<ListCampusController> {
                           ),
                         ),
                       ),
-                      GestureDetector(
-                        // color: UI.foreground,
-                        child: Container(
-                          height: 45,
-                          width: 45,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(13),
-                            color: UI.foreground,
-                          ),
-                          child: const Icon(
-                            Icons.search,
-                            color: UI.action,
-                          ),
-                        ),
-                        onTap: () {},
-                      ),
+                      // GestureDetector(
+                      //   // color: UI.foreground,
+                      //   child: Container(
+                      //     height: 45,
+                      //     width: 45,
+                      //     decoration: BoxDecoration(
+                      //       borderRadius: BorderRadius.circular(13),
+                      //       color: UI.foreground,
+                      //     ),
+                      //     child: const Icon(
+                      //       Icons.search,
+                      //       color: UI.action,
+                      //     ),
+                      //   ),
+                      //   onTap: () {},
+                      // ),
                     ],
                   ),
                 ),
@@ -82,6 +82,7 @@ class ListCampusView extends GetView<ListCampusController> {
                             itemBuilder: (context, index) {
                               var d =
                                   getData[index].data() as Map<String, dynamic>;
+                              controller.getDataImage(getData[index].id);
                               return GestureDetector(
                                 onTap: () => Get.toNamed(Routes.MAPS_CAMPUS,
                                     arguments: getData[index].id),
@@ -124,9 +125,21 @@ class ListCampusView extends GetView<ListCampusController> {
                                                   topLeft: Radius.circular(25),
                                                   topRight: Radius.circular(25),
                                                 ),
-                                                child: Image.network(
-                                                  "https://picsum.photos/id/${index}/200",
-                                                  fit: BoxFit.cover,
+                                                child: Obx(
+                                                  () => (controller.imageLength
+                                                              .value >
+                                                          0)
+                                                      ? Image.memory(
+                                                          controller
+                                                              .imageMain
+                                                              .values
+                                                              .first
+                                                              .value,
+                                                          fit: BoxFit.fill,
+                                                        )
+                                                      : Container(
+                                                          color: Colors.grey,
+                                                        ),
                                                 ),
                                               ),
                                             ),

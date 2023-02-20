@@ -12,6 +12,7 @@ import 'package:koskosan/app/Utils/Func.dart';
 import 'package:koskosan/app/Utils/Menu.dart';
 import 'package:koskosan/app/Utils/UI.dart';
 import 'package:koskosan/app/routes/app_pages.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../controllers/home_controller.dart';
 
@@ -30,228 +31,186 @@ class HomeView extends GetView<HomeController> {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.active) {
                     // print(snapshot.data!.docs);
-                    var data = snapshot.data!.docs;
-                    return Padding(
-                      padding: EdgeInsets.only(bottom: height * 0.12),
-                      child: ListView(
-                        children: [
-                          //Header Location
-                          Padding(
-                            padding: const EdgeInsets.only(left: 20, right: 20),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  // flex: 1,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(5),
-                                        child: Row(
-                                          children: [
-                                            const Text(
-                                              "Location",
+                    var dataItems = snapshot.data!.docs;
+                    var padding = const EdgeInsets.only(left: 20, right: 20);
+                    var size = MediaQuery.of(context).size;
+
+                    // controller.getDataCampus(data);
+
+                    return SlidingUpPanel(
+                      controller: controller.panelController,
+                      minHeight: size.height * 0.67,
+                      maxHeight: size.height,
+                      color: UI.background,
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(25)),
+                      body: Padding(
+                        padding: EdgeInsets.only(bottom: height * 0),
+                        child: Column(
+                          // scrollDirection: Axis.vertical,
+                          children: [
+                            //Header Location
+                            Padding(
+                              padding: padding,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    // flex: 1,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: const [
+                                            Icon(
+                                              Icons.location_on,
+                                              size: 30,
+                                              color: UI.action,
+                                            ),
+                                            SizedBox(
+                                              width: 15,
+                                            ),
+                                            Text(
+                                              "Makassar",
                                               style: TextStyle(
-                                                  color: UI.object,
-                                                  fontSize: 12),
-                                            ),
-                                            Obx(
-                                              () => PopupMenuButton(
-                                                itemBuilder: (context) {
-                                                  return [
-                                                    const PopupMenuItem(
-                                                      value: 1,
-                                                      child: Text(
-                                                        "My location",
-                                                        style: TextStyle(
-                                                            fontSize: 17,
-                                                            color: UI.object),
-                                                      ),
-                                                    ),
-                                                    const PopupMenuItem(
-                                                      value: 2,
-                                                      child: Text(
-                                                        "Makassar",
-                                                        style: TextStyle(
-                                                            fontSize: 17,
-                                                            color: UI.object),
-                                                      ),
-                                                    ),
-                                                  ];
-                                                },
-                                                onSelected: (v) {
-                                                  controller.locText.value =
-                                                      v == 1
-                                                          ? "My Location"
-                                                          : "Makassar";
-                                                  controller.locTextInitial
-                                                      .value = v == 1 ? 1 : 2;
-                                                },
-                                                initialValue: controller
-                                                    .locTextInitial.value,
-                                                color: UI.foreground,
-                                                icon: const Icon(
-                                                  Icons.keyboard_arrow_down,
-                                                  color: UI.object,
-                                                  size: 20,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Row(
-                                        children: [
-                                          const Icon(
-                                            Icons.location_on,
-                                            size: 30,
-                                            color: UI.action,
-                                          ),
-                                          Obx(
-                                            () => Text(
-                                              controller.locText.value,
-                                              style: const TextStyle(
                                                 color: UI.object,
                                                 fontSize: 15,
                                               ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                PopupMenuButton(
-                                  icon: const Icon(
-                                    Icons.more_vert,
-                                    color: UI.object,
-                                  ),
-                                  color: UI.foreground,
-                                  itemBuilder: (context) {
-                                    return [
-                                      PopupMenuItem(
-                                        value: 1,
-                                        child: popItem("Login", Icons.login),
-                                      ),
-                                      PopupMenuItem(
-                                        value: 2,
-                                        child: popItem(
-                                            "About", Icons.info_outline),
-                                      ),
-                                      PopupMenuItem(
-                                        value: 3,
-                                        child:
-                                            popItem("Exit", Icons.exit_to_app),
-                                      ),
-                                    ];
-                                  },
-                                  onSelected: (v) {
-                                    switch (v) {
-                                      case 1:
-                                        Get.toNamed(Routes.LOGIN);
-                                        break;
-                                      case 3:
-                                        Get.back();
-                                        break;
-                                    }
-                                  },
-                                ),
-                                // GestureDetector(
-                                //   onTap: (){
-                                //   },
-                                //   child: const SizedBox(
-                                //     width: 50,
-                                //     height: 50,
-                                //     // decoration: BoxDecoration(
-                                //     //     borderRadius: BorderRadius.circular(17),
-                                //     //     color: UI.foreground2),
-                                //     child: Icon(
-                                //       Icons.more_vert,
-                                //       size: 25,
-                                //       color: UI.object,
-                                //     ),
-                                //   ),
-                                // ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 25),
-                          //Search & Filter
-                          Padding(
-                            padding: const EdgeInsets.only(left: 20, right: 20),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: TextFormField(
-                                    controller: controller.search,
-                                    decoration: InputDecoration(
-                                      fillColor: UI.foreground,
-                                      filled: true,
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(30),
-                                        borderSide: BorderSide.none,
-                                      ),
-                                      suffixIcon: const Icon(
-                                        Icons.search,
-                                        color: UI.object,
-                                      ),
+                                          ],
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ),
-                                const SizedBox(width: 10),
-                                Container(
-                                  width: 50,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(17),
-                                      color: UI.foreground2),
-                                  child: const Icon(
-                                    CupertinoIcons.bell_fill,
-                                    size: 25,
-                                    color: UI.action,
+                                  PopupMenuButton(
+                                    icon: const Icon(
+                                      Icons.more_vert,
+                                      color: UI.object,
+                                    ),
+                                    color: UI.foreground,
+                                    itemBuilder: (context) {
+                                      return [
+                                        PopupMenuItem(
+                                          value: 1,
+                                          child: popItem("Login", Icons.login),
+                                        ),
+                                        PopupMenuItem(
+                                          value: 2,
+                                          child: popItem(
+                                              "About", Icons.info_outline),
+                                        ),
+                                        PopupMenuItem(
+                                          value: 3,
+                                          child: popItem(
+                                              "Exit", Icons.exit_to_app),
+                                        ),
+                                      ];
+                                    },
+                                    onSelected: (v) {
+                                      switch (v) {
+                                        case 1:
+                                          Get.toNamed(Routes.LOGIN);
+                                          break;
+                                        case 3:
+                                          Get.back();
+                                          break;
+                                      }
+                                    },
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 25),
-                          // Category
-                          Padding(
-                            padding: const EdgeInsets.only(left: 20, right: 20),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                itemCategory(
-                                  context,
-                                  "Kampus",
-                                  CupertinoIcons.building_2_fill,
-                                  () => Get.toNamed(Routes.LIST_CAMPUS),
-                                ),
-                                const SizedBox(width: 20),
-                                // itemCategory(
-                                //   context,
-                                //   "Favorite",
-                                //   Icons.favorite,
-                                //   () {},
-                                // ),
-                                itemCategory(
-                                  context,
-                                  "Terdekat",
-                                  Icons.near_me,
-                                  () {},
-                                ),
-                              ],
+                            const SizedBox(height: 10),
+                            Padding(
+                              padding: padding,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  itemCategory(
+                                    context,
+                                    "Kampus",
+                                    CupertinoIcons.building_2_fill,
+                                    () => Get.toNamed(Routes.LIST_CAMPUS),
+                                  ),
+                                  const SizedBox(width: 20),
+                                  // itemCategory(
+                                  //   context,
+                                  //   "Favorite",
+                                  //   Icons.favorite,
+                                  //   () {},
+                                  // ),
+                                  // itemCategory(
+                                  //   context,
+                                  //   "Terdekat",
+                                  //   Icons.near_me,
+                                  //   () {},
+                                  // ),
+                                ],
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 20),
-                          SizedBox(
-                            height: 250,
-                            child: itemHead("Undipa", data),
-                          ),
-                          const SizedBox(height: 15),
-                        ],
+                            const SizedBox(height: 15),
+                          ],
+                        ),
                       ),
+                      panelBuilder: (c) {
+                        return Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: size.width * 0.45),
+                              child: GestureDetector(
+                                onTap: () =>
+                                    controller.panelController.isPanelOpen
+                                        ? controller.panelController.close()
+                                        : controller.panelController.open(),
+                                child: const Divider(
+                                  color: Colors.grey,
+                                  thickness: 3,
+                                  height: 20,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 7),
+                            Expanded(
+                              child: GridView.builder(
+                                controller: c,
+                                // physics: NeverScrollableScrollPhysics(),
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 8,
+                                  mainAxisSpacing: 8,
+                                  mainAxisExtent: 200,
+                                ),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 13),
+                                itemCount: dataItems.length,
+                                // itemCount: 10,
+                                itemBuilder: (BuildContext context, int index) {
+                                  var data = dataItems[index].data()
+                                      as Map<String, dynamic>;
+                                  // print(data);
+                                  var id = dataItems[index].id;
+                                  var size = MediaQuery.of(context).size;
+                                  return GestureDetector(
+                                    onTap: () => Get.toNamed(
+                                      Routes.ITEM_DETAIL,
+                                      arguments: id,
+                                    ),
+                                    onDoubleTap: () => controller.likeSet(id),
+                                    child: item(
+                                      size,
+                                      id,
+                                      data,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                            SizedBox(height: height * 0.165),
+                          ],
+                        );
+                      },
                     );
                   }
                   return const Center(child: CircularProgressIndicator());
@@ -279,69 +238,6 @@ class HomeView extends GetView<HomeController> {
           style: const TextStyle(
             fontSize: 17,
             color: UI.object,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget itemHead(
-    String headName,
-    List<QueryDocumentSnapshot<Object?>> dataItems,
-  ) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        //Head
-        Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                headName,
-                style: const TextStyle(
-                  fontSize: 20,
-                  color: UI.object,
-                ),
-              ),
-              TextButton(
-                onPressed: () {}, // Lihat semua
-                child: const Text(
-                  "See All",
-                  style: TextStyle(color: UI.action, fontSize: 17),
-                ),
-              )
-            ],
-          ),
-        ),
-        //Items
-        Expanded(
-          child: ListView.separated(
-            separatorBuilder: (context, index) {
-              return const SizedBox(width: 20);
-            },
-            itemCount: dataItems.length,
-            scrollDirection: Axis.horizontal,
-            itemBuilder: (BuildContext context, int index) {
-              var data = dataItems[index].data() as Map<String, dynamic>;
-              // print(data);
-              var id = dataItems[index].id;
-
-              return GestureDetector(
-                onTap: () => Get.toNamed(Routes.ITEM_DETAIL, arguments: id),
-                onDoubleTap: () => controller.likeSet(id),
-                child: items(
-                  context,
-                  id: dataItems[index].id,
-                  data: data,
-                  index: index,
-                  itemLength: dataItems.length,
-                ),
-              );
-            },
           ),
         ),
       ],
@@ -379,46 +275,6 @@ class HomeView extends GetView<HomeController> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget items(
-    BuildContext context, {
-    required String id,
-    required Map<String, dynamic> data,
-    required index,
-    required itemLength,
-  }) {
-    var size = MediaQuery.of(context).size;
-
-    var like = false;
-    if (index == 0) {
-      return Row(
-        children: [
-          const SizedBox(width: 20),
-          item(
-            size,
-            id,
-            data,
-          ),
-        ],
-      );
-    } else if (index + 1 == itemLength) {
-      return Row(
-        children: [
-          item(
-            size,
-            id,
-            data,
-          ),
-          const SizedBox(width: 20),
-        ],
-      );
-    }
-    return item(
-      size,
-      id,
-      data,
     );
   }
 
@@ -497,6 +353,7 @@ class HomeView extends GetView<HomeController> {
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   //Item Category and Price
                   Row(
@@ -527,12 +384,12 @@ class HomeView extends GetView<HomeController> {
                               Text(
                                 FUNC.convertToK(priceMin),
                                 style: const TextStyle(
-                                    fontSize: 15, color: UI.action),
+                                    fontSize: 12, color: UI.action),
                               ),
                               const Text(
                                 " /bln",
                                 style:
-                                    TextStyle(fontSize: 15, color: UI.object),
+                                    TextStyle(fontSize: 12, color: UI.object),
                               ),
                             ],
                           ),
@@ -546,41 +403,50 @@ class HomeView extends GetView<HomeController> {
                     data['name'].toString(),
                     style: const TextStyle(
                       color: UI.object,
-                      fontSize: 17,
+                      fontSize: 15,
                     ),
                   ),
                   Row(
                     children: [
                       Expanded(
                         flex: 1,
-                        child: Row(
-                          children: [
-                            const Icon(
-                              Icons.location_on,
-                              size: 17,
-                              color: UI.action,
-                            ),
-                            Obx(
-                              () {
-                                if (controller.distNameOfCampusLength > 0) {
-                                  if (controller.distNameOfCampus
-                                      .containsKey(id)) {
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.location_on,
+                                size: 13,
+                                color: UI.action,
+                              ),
+                              Obx(
+                                () {
+                                  if (controller.distNameOfCampusLength.value >
+                                      0) {
+                                    // if (controller.distNameOfCampus
+                                    //     .containsKey(id)) {
                                     return Text(
                                       "${controller.distNameOfCampus[id]}, Jarak: ${controller.dist[id]}",
                                       style: const TextStyle(
-                                          fontSize: 15, color: UI.object),
+                                          fontSize: 11, color: UI.object),
+                                    );
+                                    // }
+                                    // return const Text(
+                                    //   "Not Found",
+                                    //   style: TextStyle(
+                                    //       fontSize: 11, color: UI.object),
+                                    // );
+                                  } else {
+                                    return const Text(
+                                      "Not Found",
+                                      style: TextStyle(
+                                          fontSize: 11, color: UI.object),
                                     );
                                   }
-                                }
-
-                                return const Text(
-                                  "Not Found",
-                                  style:
-                                      TextStyle(fontSize: 15, color: UI.object),
-                                );
-                              },
-                            ),
-                          ],
+                                },
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       GestureDetector(
@@ -625,7 +491,7 @@ class HomeView extends GetView<HomeController> {
           border: Border.all(width: 1, color: UI.action)),
       child: Text(
         title,
-        style: const TextStyle(fontSize: 15, color: UI.action),
+        style: const TextStyle(fontSize: 8, color: UI.action),
       ),
     );
   }

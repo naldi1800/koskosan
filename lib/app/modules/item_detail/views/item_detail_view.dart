@@ -234,9 +234,8 @@ class ItemDetailView extends GetView<ItemDetailController> {
                                   size: 30,
                                 ),
                                 onPressed: () async {
-                                  final phoneNumber = (data['phone'] != null)
-                                      ? data['phone']
-                                      : false;
+                                  final phoneNumber =
+                                      (data['phone'] != null) ? true : false;
                                   if (!phoneNumber) {
                                     Get.defaultDialog(
                                       title: "Terjadi Kesalahan",
@@ -249,7 +248,8 @@ class ItemDetailView extends GetView<ItemDetailController> {
                                           const TextStyle(color: UI.object),
                                     );
                                   } else {
-                                    final url = "https://wa.me/$phoneNumber";
+                                    final phone = data['phone'];
+                                    final url = "https://wa.me/$phone";
                                     if (await canLaunch(url)) {
                                       await launch(url);
                                     } else {
@@ -624,7 +624,11 @@ class ItemDetailView extends GetView<ItemDetailController> {
                     onPressed: () {
                       if (Get.parameters['in'] == null) {
                         Get.offAndToNamed(Routes.HOME);
-                      } else {
+                      } else if (Get.parameters['in'] == "favorite") {
+                        Get.offAndToNamed(
+                          Routes.ITEM_FAVORITE,
+                        );
+                      } else if (Get.parameters['in'] == "Maps") {
                         Get.offAndToNamed(
                           Routes.MAPS_CAMPUS,
                           arguments: Get.parameters['in'],

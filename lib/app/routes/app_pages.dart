@@ -2,12 +2,26 @@ import 'package:get/get.dart';
 
 import '../modules/ItemsList/bindings/items_list_binding.dart';
 import '../modules/ItemsList/views/items_list_view.dart';
+import '../modules/admin_campus/bindings/admin_campus_binding.dart';
+import '../modules/admin_campus/views/admin_campus_view.dart';
+import '../modules/admin_campus_add/bindings/admin_campus_add_binding.dart';
+import '../modules/admin_campus_add/views/admin_campus_add_view.dart';
+import '../modules/admin_home/bindings/admin_home_binding.dart';
+import '../modules/admin_home/views/admin_home_view.dart';
+import '../modules/admin_kos/bindings/admin_kos_binding.dart';
+import '../modules/admin_kos/views/admin_kos_view.dart';
+import '../modules/admin_kos_add/bindings/admin_kos_add_binding.dart';
+import '../modules/admin_kos_add/views/admin_kos_add_view.dart';
 import '../modules/galleryItem/bindings/gallery_item_binding.dart';
 import '../modules/galleryItem/views/gallery_item_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/item_detail/bindings/item_detail_binding.dart';
 import '../modules/item_detail/views/item_detail_view.dart';
+import '../modules/item_favorite/bindings/item_favorite_binding.dart';
+import '../modules/item_favorite/views/item_favorite_view.dart';
+import '../modules/item_search/bindings/item_search_binding.dart';
+import '../modules/item_search/views/item_search_view.dart';
 import '../modules/list_campus/bindings/list_campus_binding.dart';
 import '../modules/list_campus/views/list_campus_view.dart';
 import '../modules/login/bindings/login_binding.dart';
@@ -32,7 +46,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.LOGIN,
-      page: () => const LoginView(),
+      page: () => LoginView(),
       binding: LoginBinding(),
     ),
     GetPage(
@@ -65,6 +79,41 @@ class AppPages {
       name: _Paths.LIST_CAMPUS,
       page: () => const ListCampusView(),
       binding: ListCampusBinding(),
+    ),
+    GetPage(
+      name: _Paths.ITEM_FAVORITE,
+      page: () => const ItemFavoriteView(),
+      binding: ItemFavoriteBinding(),
+    ),
+    GetPage(
+      name: _Paths.ITEM_SEARCH,
+      page: () => const ItemSearchView(),
+      binding: ItemSearchBinding(),
+    ),
+    GetPage(
+      name: _Paths.ADMIN_HOME,
+      page: () => AdminHomeView(),
+      binding: AdminHomeBinding(),
+    ),
+    GetPage(
+      name: _Paths.ADMIN_CAMPUS,
+      page: () => const AdminCampusView(),
+      binding: AdminCampusBinding(),
+    ),
+    GetPage(
+      name: _Paths.ADMIN_CAMPUS_ADD,
+      page: () => AdminCampusAddView(),
+      binding: AdminCampusAddBinding(),
+    ),
+    GetPage(
+      name: _Paths.ADMIN_KOS,
+      page: () => const AdminKosView(),
+      binding: AdminKosBinding(),
+    ),
+    GetPage(
+      name: _Paths.ADMIN_KOS_ADD,
+      page: () => const AdminKosAddView(),
+      binding: AdminKosAddBinding(),
     ),
   ];
 }
