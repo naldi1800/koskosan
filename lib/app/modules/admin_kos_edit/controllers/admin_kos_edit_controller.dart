@@ -12,7 +12,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:koskosan/app/Utils/UI.dart';
 import 'package:koskosan/app/routes/app_pages.dart';
 
-class AdminKosAddController extends GetxController {
+class AdminKosEditController extends GetxController {
   late TextEditingController namaC;
   late TextEditingController desC;
   late TextEditingController locC;
@@ -114,6 +114,23 @@ class AdminKosAddController extends GetxController {
     facilityUC.dispose();
   }
 
+  Future<DocumentSnapshot<Map<String, dynamic>>> getData(String docID) async {
+    var get = firestore.collection("boardings").doc(docID);
+    await getImageFromFirebase(docID);
+    return get.get();
+  }
+
+  Future getImageFromFirebase(String docID) async {
+    var ref = storage.ref().child("galery").child(docID);
+    var getAll = await ref.listAll();
+    image.value = [];
+    getAll.items.forEach((e) async {
+      var img = await e.getData();
+      image.value.add(img!);
+      imageLength.value = image.value.length;
+    });
+  }
+
   void deleteImage(int i) {
     imageLength.value = 0;
     image.value.removeAt(i);
@@ -169,15 +186,7 @@ class AdminKosAddController extends GetxController {
       dialog(msg: "Semua harus di isi");
       return;
     }
-    // if (name == "") {
-    //   dialog(msg: "Nama kampus harus diisi");
-    // } else if (desc == "") {
-    //   dialog(msg: "Nama Singkatan kampus harus diisi");
-    // } else if (point == "") {
-    //   dialog(msg: "Lokasi kampus harus dipilih");
-    // }
-    var campus = firestore.collection("boardings");
-    // GeoPoint g = GeoPoint();
+    var kos = firestore.collection("boardings").doc(Get.arguments);
 
     List<LatLng> geo = marker.value.map((e) => e.position).toList();
     double lat = (geo.isNotEmpty) ? geo[0].latitude : 0.0;
@@ -186,7 +195,7 @@ class AdminKosAddController extends GetxController {
       lat,
       long,
     );
-    var saves = await campus.add({
+    await kos.update({
       "name": name,
       "description": desc,
       "position": pos,
@@ -198,13 +207,18 @@ class AdminKosAddController extends GetxController {
       "rooms": rooms.map((e) => int.parse(e)).toList(),
       "sizes": sizes,
       "phone": hp,
-    });
-    // print(id);
-    if (saves.id == "") {
-      dialog(msg: "Data gagal disimpan");
-    } else {
+    }).then((value) async {
+      var id = Get.arguments;
+      // Delete All Image
+      ListResult deleted =
+          await storage.ref().child("galery").child(id).listAll();
+
+      for (var del in deleted.items) {
+        await del.delete();
+      }
+
+      // Save
       var index = 1;
-      var id = saves.id;
       await Future.wait(image.value.map(
         (e) async {
           var name = "${index}.jpg";
@@ -212,6 +226,7 @@ class AdminKosAddController extends GetxController {
           await storage.ref("galery/$id/$name").putData(e);
         },
       ));
+
       Get.defaultDialog(
         title: "INFO",
         middleText: "Data berhasil disimpan",
@@ -227,7 +242,41 @@ class AdminKosAddController extends GetxController {
         textConfirm: "Oke",
         onConfirm: () => Get.offAndToNamed(Routes.ADMIN_KOS),
       );
-    }
+    }).catchError((err) => dialog(msg: "Data gagal disimpan"));
+    // Future.wait()/;
+    // print(id);
+    // if (saves.) {
+    //   dialog(msg: "Data gagal disimpan");
+    // } else {
+    //   var index = 1;
+    //   var id = Get.arguments;
+    //   // Delete All Image
+    //   var ref = storage.ref().child("galery").child(id)
+
+    //   // Save
+    //   await Future.wait(image.value.map(
+    //     (e) async {
+    //       var name = "${index}.jpg";
+    //       index++;
+    //       await storage.ref("galery/$id/$name").putData(e);
+    //     },
+    //   ));
+    //   Get.defaultDialog(
+    //     title: "INFO",
+    //     middleText: "Data berhasil disimpan",
+    //     titleStyle: const TextStyle(
+    //       fontSize: 18,
+    //       color: UI.object,
+    //     ),
+    //     middleTextStyle: const TextStyle(
+    //       fontSize: 18,
+    //       color: UI.object,
+    //     ),
+    //     backgroundColor: UI.foreground,
+    //     textConfirm: "Oke",
+    //     onConfirm: () => Get.offAndToNamed(Routes.ADMIN_KOS),
+    //   );
+    // }
   }
 
   void dialog({required String msg}) {

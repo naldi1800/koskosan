@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -31,7 +33,7 @@ class AdminKosAddView extends GetView<AdminKosAddController> {
             const SizedBox(height: 15),
             Container(
               width: double.infinity,
-              height: 150,
+              height: 250,
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: ClipRRect(
                 borderRadius: const BorderRadius.all(
@@ -39,6 +41,9 @@ class AdminKosAddView extends GetView<AdminKosAddController> {
                 ),
                 child: Obx(
                   () => GoogleMap(
+                    gestureRecognizers: Set()
+                      ..add(Factory<OneSequenceGestureRecognizer>(
+                          () => EagerGestureRecognizer())),
                     initialCameraPosition: const CameraPosition(
                       target: LatLng(-5.1404082, 119.4832254),
                       zoom: 10.0,
@@ -64,7 +69,8 @@ class AdminKosAddView extends GetView<AdminKosAddController> {
                           "${pos.latitude} | ${pos.longitude}";
                     },
                     myLocationEnabled: true,
-                    zoomControlsEnabled: false,
+                    zoomControlsEnabled: true,
+                    zoomGesturesEnabled: true,
                   ),
                 ),
               ),
@@ -158,6 +164,7 @@ class AdminKosAddView extends GetView<AdminKosAddController> {
                 ),
               ),
             ),
+            const SizedBox(height: 7),
             Obx(
               () => AnimatedContainer(
                 duration: const Duration(milliseconds: 500),
@@ -171,7 +178,26 @@ class AdminKosAddView extends GetView<AdminKosAddController> {
                       ? List.generate(controller.image.value.length, (i) {
                           return Row(
                             children: [
-                              Image.memory(controller.image.value[i]),
+                              Stack(
+                                alignment: AlignmentDirectional.topEnd,
+                                // alignment:
+                                children: [
+                                  Image.memory(controller.image.value[i]),
+                                  Container(
+                                    padding: const EdgeInsets.only(
+                                      right: 10,
+                                      top: 10,
+                                    ),
+                                    child: GestureDetector(
+                                      onTap: () => controller.deleteImage(i),
+                                      child: const Icon(
+                                        Icons.close,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
                               const SizedBox(width: 5),
                             ],
                           );

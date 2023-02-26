@@ -18,6 +18,8 @@ abstract class Routes {
   static const ADMIN_CAMPUS_ADD = _Paths.ADMIN_CAMPUS_ADD;
   static const ADMIN_KOS = _Paths.ADMIN_KOS;
   static const ADMIN_KOS_ADD = _Paths.ADMIN_KOS_ADD;
+  static const ADMIN_CAMPUS_EDIT = _Paths.ADMIN_CAMPUS_EDIT;
+  static const ADMIN_KOS_EDIT = _Paths.ADMIN_KOS_EDIT;
 }
 
 abstract class _Paths {
@@ -37,4 +39,6 @@ abstract class _Paths {
   static const ADMIN_CAMPUS_ADD = '/admin-campus-add';
   static const ADMIN_KOS = '/admin-kos';
   static const ADMIN_KOS_ADD = '/admin-kos-add';
+  static const ADMIN_CAMPUS_EDIT = '/admin-campus-edit';
+  static const ADMIN_KOS_EDIT = '/admin-kos-edit';
 }

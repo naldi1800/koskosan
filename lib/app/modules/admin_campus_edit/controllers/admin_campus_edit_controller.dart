@@ -12,7 +12,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:koskosan/app/Utils/UI.dart';
 import 'package:koskosan/app/routes/app_pages.dart';
 
-class AdminCampusAddController extends GetxController {
+class AdminCampusEditController extends GetxController {
   late TextEditingController namaC;
   late TextEditingController singkatanC;
   late TextEditingController locC;
@@ -72,6 +72,23 @@ class AdminCampusAddController extends GetxController {
     imageC.dispose();
   }
 
+  Future<DocumentSnapshot<Map<String, dynamic>>> getData(String docID) async {
+    var get = firestore.collection("campus").doc(docID);
+    await getImageFromFirebase(docID);
+    return get.get();
+  }
+
+  Future getImageFromFirebase(String docID) async {
+    var ref = storage.ref().child("galery").child(docID);
+    var getAll = await ref.listAll();
+    image.value = [];
+    getAll.items.forEach((e) async {
+      var img = await e.getData();
+      image.value.add(img!);
+      imageLength.value = image.value.length;
+    });
+  }
+
   void getImage() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       allowMultiple: true,
@@ -87,9 +104,9 @@ class AdminCampusAddController extends GetxController {
         bytes.add(byte);
         image.value.add(byte);
         imageLength.value = image.value.length;
+        imageC.text += e.path;
         // print("ada");
       });
-        imageC.text = "Image loaded";
       // await Future.delayed(Duration(seconds: 2));
       // print("Cek gambar : $bytes");
     } else {
@@ -101,7 +118,7 @@ class AdminCampusAddController extends GetxController {
     imageLength.value = 0;
     image.value.removeAt(i);
     imageLength.value = image.value.length;
-    if(imageLength.value == 0){
+    if (imageLength.value == 0) {
       imageC.text = "";
     }
   }
@@ -123,7 +140,7 @@ class AdminCampusAddController extends GetxController {
     } else if (point == "") {
       dialog(msg: "Lokasi kampus harus dipilih");
     }
-    var campus = firestore.collection("campus");
+    var campus = firestore.collection("campus").doc(Get.arguments);
     // GeoPoint g = GeoPoint();
 
     List<LatLng> geo = marker.value.map((e) => e.position).toList();
@@ -133,37 +150,64 @@ class AdminCampusAddController extends GetxController {
       lat,
       long,
     );
-    var saves =
-        await campus.add({"name": name, "abbreviation": skt, "location": pos});
+    await campus
+        .update({"name": name, "abbreviation": skt, "location": pos}).then(
+      (value) async {
+        var index = 1;
+        var id = Get.arguments;
+        await Future.wait(image.value.map(
+          (e) async {
+            var name = "${index}.jpg";
+            index++;
+            await storage.ref("campus/$id/$name").putData(e);
+          },
+        ));
+        Get.defaultDialog(
+          title: "INFO",
+          middleText: "Data berhasil disimpan",
+          titleStyle: const TextStyle(
+            fontSize: 18,
+            color: UI.object,
+          ),
+          middleTextStyle: const TextStyle(
+            fontSize: 18,
+            color: UI.object,
+          ),
+          backgroundColor: UI.foreground,
+          textConfirm: "Oke",
+          onConfirm: () => Get.offAndToNamed(Routes.ADMIN_CAMPUS),
+        );
+      },
+    ).catchError((err) => dialog(msg: "Data gagal disimpan"));
     // print(id);
-    if (saves.id == "") {
-      dialog(msg: "Data gagal disimpan");
-    } else {
-      var index = 1;
-      var id = saves.id;
-      await Future.wait(image.value.map(
-        (e) async {
-          var name = "${index}.jpg";
-          index++;
-          await storage.ref("campus/$id/$name").putData(e);
-        },
-      ));
-      Get.defaultDialog(
-        title: "INFO",
-        middleText: "Data berhasil disimpan",
-        titleStyle: const TextStyle(
-          fontSize: 18,
-          color: UI.object,
-        ),
-        middleTextStyle: const TextStyle(
-          fontSize: 18,
-          color: UI.object,
-        ),
-        backgroundColor: UI.foreground,
-        textConfirm: "Oke",
-        onConfirm: () => Get.offAndToNamed(Routes.ADMIN_CAMPUS),
-      );
-    }
+    // if (saves.id == "") {
+    //   dialog(msg: "Data gagal disimpan");
+    // } else {
+    //   var index = 1;
+    //   var id = saves.id;
+    //   await Future.wait(image.value.map(
+    //     (e) async {
+    //       var name = "${index}.jpg";
+    //       index++;
+    //       await storage.ref("campus/$id/$name").putData(e);
+    //     },
+    //   ));
+    //   Get.defaultDialog(
+    //     title: "INFO",
+    //     middleText: "Data berhasil disimpan",
+    //     titleStyle: const TextStyle(
+    //       fontSize: 18,
+    //       color: UI.object,
+    //     ),
+    //     middleTextStyle: const TextStyle(
+    //       fontSize: 18,
+    //       color: UI.object,
+    //     ),
+    //     backgroundColor: UI.foreground,
+    //     textConfirm: "Oke",
+    //     onConfirm: () => Get.offAndToNamed(Routes.ADMIN_CAMPUS),
+    //   );
+    // }
   }
 
   void dialog({required String msg}) {

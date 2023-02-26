@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -27,6 +28,7 @@ class ListCampusView extends GetView<ListCampusController> {
                     right: sizePadding,
                     top: sizePadding - 10,
                   ),
+                  color: UI.foreground,
                   child: Row(
                     children: [
                       IconButton(
@@ -47,31 +49,15 @@ class ListCampusView extends GetView<ListCampusController> {
                           ),
                         ),
                       ),
-                      // GestureDetector(
-                      //   // color: UI.foreground,
-                      //   child: Container(
-                      //     height: 45,
-                      //     width: 45,
-                      //     decoration: BoxDecoration(
-                      //       borderRadius: BorderRadius.circular(13),
-                      //       color: UI.foreground,
-                      //     ),
-                      //     child: const Icon(
-                      //       Icons.search,
-                      //       color: UI.action,
-                      //     ),
-                      //   ),
-                      //   onTap: () {},
-                      // ),
                     ],
                   ),
                 ),
                 const SizedBox(height: 10),
                 Expanded(
-                  child: StreamBuilder(
-                    stream: controller.getAllData(),
+                  child: FutureBuilder(
+                    future: controller.getAllData(),
                     builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.active) {
+                      if (snapshot.connectionState == ConnectionState.done) {
                         var getData = snapshot.data!.docs;
                         return Padding(
                           padding: EdgeInsets.only(
@@ -79,137 +65,16 @@ class ListCampusView extends GetView<ListCampusController> {
                           ),
                           child: ListView.builder(
                             itemCount: getData.length,
+                            // addAutomaticKeepAlives: true,
+                            // addRepaintBoundaries: true,
                             itemBuilder: (context, index) {
                               var d =
                                   getData[index].data() as Map<String, dynamic>;
-                              controller.getDataImage(getData[index].id);
-                              return GestureDetector(
-                                onTap: () => Get.toNamed(Routes.MAPS_CAMPUS,
-                                    arguments: getData[index].id),
-                                child: Column(
-                                  children: [
-                                    index == 0
-                                        ? const SizedBox(height: 10)
-                                        : const SizedBox(),
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                        left: sizePadding,
-                                        right: sizePadding,
-                                      ),
-                                      child: Container(
-                                        height: 255,
-                                        width: double.infinity,
-                                        decoration: BoxDecoration(
-                                          // border: Border.all(),
-                                          borderRadius:
-                                              BorderRadius.circular(25),
-                                          color: UI.foreground,
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Container(
-                                              height: 275 * 0.7,
-                                              width: double.infinity,
-                                              decoration: const BoxDecoration(
-                                                borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(25),
-                                                  topRight: Radius.circular(25),
-                                                ),
-                                                color: UI.object,
-                                              ),
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    const BorderRadius.only(
-                                                  topLeft: Radius.circular(25),
-                                                  topRight: Radius.circular(25),
-                                                ),
-                                                child: Obx(
-                                                  () => (controller.imageLength
-                                                              .value >
-                                                          0)
-                                                      ? Image.memory(
-                                                          controller
-                                                              .imageMain
-                                                              .values
-                                                              .first
-                                                              .value,
-                                                          fit: BoxFit.fill,
-                                                        )
-                                                      : Container(
-                                                          color: Colors.grey,
-                                                        ),
-                                                ),
-                                              ),
-                                            ),
-                                            // const SizedBox(height: 5),
-                                            Expanded(
-                                              child: Align(
-                                                alignment: Alignment.center,
-                                                child: Padding(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                    horizontal: 15,
-                                                    vertical: 5,
-                                                  ),
-                                                  child: Text(
-                                                    d['name'],
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    maxLines: 2,
-                                                    textAlign: TextAlign.center,
-                                                    style: const TextStyle(
-                                                      fontSize: 20,
-                                                      color: UI.object,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            // Padding(
-                                            //   padding: const EdgeInsets.symmetric(
-                                            //     horizontal: 15,
-                                            //     vertical: 5,
-                                            //   ),
-                                            //   child: Row(
-                                            //     mainAxisAlignment:
-                                            //         MainAxisAlignment.spaceEvenly,
-                                            //     mainAxisSize: MainAxisSize.max,
-                                            //     children: const [
-                                            //       Icon(
-                                            //         Icons.location_on,
-                                            //         size: 20,
-                                            //         color: UI.action,
-                                            //       ),
-                                            //       SizedBox(width: 10),
-                                            //       Text(
-                                            //         "Undipa",
-                                            //         style: TextStyle(
-                                            //             fontSize: 15,
-                                            //             color: UI.object),
-                                            //       ),
-                                            //       Expanded(
-                                            //         child: Align(
-                                            //           alignment:
-                                            //               Alignment.centerRight,
-                                            //           child: Icon(
-                                            //             Icons.favorite_outline,
-                                            //             color: UI.action,
-                                            //           ),
-                                            //         ),
-                                            //       )
-                                            //     ],
-                                            //   ),
-                                            // )
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 20),
-                                  ],
-                                ),
-                              );
+                              var id = getData[index].id;
+                              if(!controller.images.containsKey(id)){
+                                controller.getDataImage(id);
+                              }
+                              return item(id, index, sizePadding, d);
                             },
                           ),
                         );
@@ -223,6 +88,117 @@ class ListCampusView extends GetView<ListCampusController> {
             Menu.menu(height, 2)
           ],
         ),
+      ),
+    );
+  }
+
+  Widget item(
+      String id, int index, double sizePadding, Map<String, dynamic> d) {
+    return GestureDetector(
+      onTap: () => Get.toNamed(
+        Routes.MAPS_CAMPUS,
+        arguments: id,
+      ),
+      onDoubleTap: () => controller.getDataImage(id),
+      child: Column(
+        children: [
+          index == 0 ? const SizedBox(height: 10) : const SizedBox(),
+          Padding(
+            padding: EdgeInsets.only(
+              left: sizePadding,
+              right: sizePadding,
+            ),
+            child: Container(
+              height: 255,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                // border: Border.all(),
+                borderRadius: BorderRadius.circular(25),
+                color: UI.foreground,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 275 * 0.7,
+                    width: double.infinity,
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(25),
+                        topRight: Radius.circular(25),
+                      ),
+                      color: UI.object,
+                    ),
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(25),
+                        topRight: Radius.circular(25),
+                      ),
+                      child: Obx(
+                        () => (controller.imageCheck.value)
+                            ? (controller.images.containsKey(id))
+                                ? Image.network(
+                                    controller.images[id]!,
+                                    fit: BoxFit.fill,
+                                  )
+                                : Container(
+                                    color: Colors.grey,
+                                    child: const Center(
+                                      child: Padding(
+                                        padding: EdgeInsets.all(15),
+                                        child: Text(
+                                          "Image not found or not loaded double tap to reload",
+                                          maxLines: 2,
+                                          textAlign: TextAlign.center,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              color: UI.foreground),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                            : Container(
+                                color: Colors.grey,
+                                child: const Center(
+                                  child: Text(
+                                    "Loading Image",
+                                    style: TextStyle(
+                                        fontSize: 20, color: UI.foreground),
+                                  ),
+                                ),
+                              ),
+                      ),
+                    ),
+                  ),
+                  // const SizedBox(height: 5),
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 15,
+                          vertical: 5,
+                        ),
+                        child: Text(
+                          d['name'],
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            color: UI.object,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+        ],
       ),
     );
   }

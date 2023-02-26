@@ -6,12 +6,16 @@ import '../modules/admin_campus/bindings/admin_campus_binding.dart';
 import '../modules/admin_campus/views/admin_campus_view.dart';
 import '../modules/admin_campus_add/bindings/admin_campus_add_binding.dart';
 import '../modules/admin_campus_add/views/admin_campus_add_view.dart';
+import '../modules/admin_campus_edit/bindings/admin_campus_edit_binding.dart';
+import '../modules/admin_campus_edit/views/admin_campus_edit_view.dart';
 import '../modules/admin_home/bindings/admin_home_binding.dart';
 import '../modules/admin_home/views/admin_home_view.dart';
 import '../modules/admin_kos/bindings/admin_kos_binding.dart';
 import '../modules/admin_kos/views/admin_kos_view.dart';
 import '../modules/admin_kos_add/bindings/admin_kos_add_binding.dart';
 import '../modules/admin_kos_add/views/admin_kos_add_view.dart';
+import '../modules/admin_kos_edit/bindings/admin_kos_edit_binding.dart';
+import '../modules/admin_kos_edit/views/admin_kos_edit_view.dart';
 import '../modules/galleryItem/bindings/gallery_item_binding.dart';
 import '../modules/galleryItem/views/gallery_item_view.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -114,6 +118,16 @@ class AppPages {
       name: _Paths.ADMIN_KOS_ADD,
       page: () => const AdminKosAddView(),
       binding: AdminKosAddBinding(),
+    ),
+    GetPage(
+      name: _Paths.ADMIN_CAMPUS_EDIT,
+      page: () => const AdminCampusEditView(),
+      binding: AdminCampusEditBinding(),
+    ),
+    GetPage(
+      name: _Paths.ADMIN_KOS_EDIT,
+      page: () => const AdminKosEditView(),
+      binding: AdminKosEditBinding(),
     ),
   ];
 }

@@ -3,14 +3,11 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:koskosan/app/Utils/Func.dart';
-import 'package:koskosan/app/Utils/UI.dart';
-import 'package:koskosan/app/routes/app_pages.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class HomeController extends GetxController {
@@ -18,19 +15,19 @@ class HomeController extends GetxController {
   late TextEditingController search;
   var panelController = PanelController();
 
-  Map<String, Rx<Uint8List>> imageMain = {};
-  Map<String, Rx<bool>> favorite = {};
-  Map<String, Rx<String>> dist = {};
-  Map<String, Rx<String>> distNameOfCampus = {};
-  var favoriteLength = 0.obs;
-  var imageLength = 0.obs;
-  var distLength = 0.obs;
-  var distNameOfCampusLength = 0.obs;
 
   var locText = "Makassar".obs;
   var locTextInitial = 2.obs;
 
   Rx<List<Widget>> itemsCampus = Rx<List<Widget>>([]);
+
+  Map<String, String> images = {};
+  Map<String, bool> favorite = {};
+  Map<String, String> dist = {};
+  Map<String, String> distNameOfCampus = {};
+  var imageCheck = false.obs;
+  var distCheck = false.obs;
+  var favoriteCheck = false.obs;
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   FirebaseStorage storage = FirebaseStorage.instance;
@@ -54,38 +51,46 @@ class HomeController extends GetxController {
   }
 
   void getDataImage(String docID) async {
-    imageLength = 0.obs;
-    var ref = storage.ref().child("galery").child(docID);
-    var imageFileMain = await ref.child("1.jpg").getData(10000000);
-    imageMain[docID] = Rx<Uint8List>(imageFileMain!);
-    imageLength.value = imageMain.length;
+    var ref = storage.ref().child("galery").child(docID).child("1.jpg");
+    bool get = await ref
+        .getDownloadURL()
+        .then(
+          (value) => true,
+        )
+        .catchError(
+          (tes) => false,
+        );
+
+    if (get) {
+      imageCheck.value = false;
+      images[docID] = await ref.getDownloadURL();
+      imageCheck.value = true;
+    }
   }
 
   void likeSet(String key) async {
-    favoriteLength.value = 0;
+    favoriteCheck.value = false;
     var x = box.read(key) ?? false;
     await box.write(key, !x);
-    favorite[key] = Rx<bool>(box.read(key));
-    favoriteLength.value = favorite.length;
-    print("Tes $x");
+    favorite[key] = box.read(key);
+    favoriteCheck.value = true;
   }
 
   void getLike(String key) async {
-    favoriteLength = 0.obs;
+    favoriteCheck.value = false;
     var x = box.read(key) ?? false;
-    favorite[key] = Rx<bool>(x);
-    favoriteLength.value = favorite.length;
+    favorite[key] = x;
+    favoriteCheck.value = true;
   }
 
   void getDistance(String docID, LatLng pos) async {
-    distLength.value = 0;
-    distNameOfCampusLength = 0.obs;
+    distCheck.value = false;
 
     // var d = 0.0;
     var d = await firestore.collection("campus").get().then((v) {
       double? min;
-      var name;
-      var dst;
+      var name = "";
+      var dst = "";
       v.docs.forEach((e) {
         Map<String, dynamic> data = e.data() as Map<String, dynamic>;
         GeoPoint geo = data['location'];
@@ -93,7 +98,6 @@ class HomeController extends GetxController {
         var x = FUNC.getDistanceOfLine(pos, posCampus);
         x = x * 100;
         x = double.parse(x.toStringAsFixed(2));
-        print("data : $x");
         var dis = (x < 1) ? "${(x * 1000).toInt()} m" : "$x km";
 
         if (min == null) {
@@ -107,19 +111,15 @@ class HomeController extends GetxController {
           name = data['abbreviation'];
           dst = dis;
         }
-
-        // print(data);
       });
       return [
         dst,
         name,
       ];
     });
-    dist[docID] = Rx<String>(d[0]);
-    distNameOfCampus[docID] = Rx<String>(d[1]);
-    distLength.value = dist.length;
-    distNameOfCampusLength.value = distNameOfCampus.length;
+    dist[docID] = d[0];
+    distNameOfCampus[docID] = d[1];
+    distCheck.value = true;
 
-    // print(d);
   }
 }

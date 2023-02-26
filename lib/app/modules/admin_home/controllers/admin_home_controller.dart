@@ -9,9 +9,17 @@ class AdminHomeController extends GetxController {
   var kos = 0.obs;
 
   @override
-  void onInit()  async{
+  void onInit() async {
     super.onInit();
-    campus.value =  await firestore.collection("campus").get().then((value) => value.docs.length);
-    kos.value =  await firestore.collection("boardings").get().then((value) => value.docs.length);
+
+    print("TES 123");
+    campus.value = await firestore
+        .collection("campus")
+        .get()
+        .then((value) => value.docs.length);
+    kos.value = await firestore
+        .collection("boardings")
+        .get()
+        .then((value) => value.docs.length);
   }
 }

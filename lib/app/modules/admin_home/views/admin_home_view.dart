@@ -114,7 +114,7 @@ class AdminHomeView extends GetView<AdminHomeController> {
                   const SizedBox(width: 10),
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: () =>Get.toNamed(Routes.ADMIN_KOS),
+                      onPressed: () => Get.toNamed(Routes.ADMIN_KOS),
                       style: const ButtonStyle(
                         backgroundColor: MaterialStatePropertyAll(
                           UI.action,
@@ -137,28 +137,28 @@ class AdminHomeView extends GetView<AdminHomeController> {
                 ],
               ),
               const SizedBox(height: 16),
-              Container(
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(15),
-                  ),
-                  color: UI.foreground,
-                  boxShadow: [BoxShadow(color: UI.action)],
-                ),
-                height: 50,
-                width: double.infinity,
-                child: const Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    "181143 | Rezky Zulfiana Thalya",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: UI.object,
-                    ),
-                  ),
-                ),
-              )
+              // Container(
+              //   decoration: const BoxDecoration(
+              //     borderRadius: BorderRadius.all(
+              //       Radius.circular(15),
+              //     ),
+              //     color: UI.foreground,
+              //     boxShadow: [BoxShadow(color: UI.action)],
+              //   ),
+              //   height: 50,
+              //   width: double.infinity,
+              //   child: const Align(
+              //     alignment: Alignment.center,
+              //     child: Text(
+              //       "181143 | Rezky Zulfiana Thalya",
+              //       textAlign: TextAlign.center,
+              //       style: TextStyle(
+              //         fontSize: 18,
+              //         color: UI.object,
+              //       ),
+              //     ),
+              //   ),
+              // )
             ],
           ),
         ));

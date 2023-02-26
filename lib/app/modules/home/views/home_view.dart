@@ -133,18 +133,6 @@ class HomeView extends GetView<HomeController> {
                                     () => Get.toNamed(Routes.LIST_CAMPUS),
                                   ),
                                   const SizedBox(width: 20),
-                                  // itemCategory(
-                                  //   context,
-                                  //   "Favorite",
-                                  //   Icons.favorite,
-                                  //   () {},
-                                  // ),
-                                  // itemCategory(
-                                  //   context,
-                                  //   "Terdekat",
-                                  //   Icons.near_me,
-                                  //   () {},
-                                  // ),
                                 ],
                               ),
                             ),
@@ -300,9 +288,15 @@ class HomeView extends GetView<HomeController> {
     LatLng pos = LatLng(geo.latitude, geo.longitude);
 
     // Function
-    controller.getDataImage(id);
-    controller.getLike(id);
-    controller.getDistance(id, pos);
+    if (!controller.images.containsKey(id)) {
+      controller.getDataImage(id);
+    }
+    if (!controller.favorite.containsKey(id)) {
+      controller.getLike(id);
+    }
+    if (!controller.dist.containsKey(id)) {
+      controller.getDistance(id, pos);
+    }
 
     return Container(
       width: size.width * 0.55,
@@ -324,23 +318,45 @@ class HomeView extends GetView<HomeController> {
                 topRight: radius,
               ),
             ),
-            child: Obx(
-              () => (controller.imageLength.value > 0)
-                  ? ((controller.imageMain.containsKey(id))
-                      ? ((controller.imageMain[id]!.value.isNotEmpty)
-                          ? ClipRRect(
-                              borderRadius: BorderRadius.only(
-                                topLeft: radius,
-                                topRight: radius,
+            child: ClipRRect(
+              borderRadius: BorderRadius.only(
+                topLeft: radius,
+                topRight: radius,
+              ),
+              child: Obx(
+                () => (controller.imageCheck.value)
+                    ? (controller.images.containsKey(id))
+                        ? Image.network(
+                            controller.images[id]!,
+                            fit: BoxFit.fill,
+                          )
+                        : Container(
+                            color: Colors.grey,
+                            child: const Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(15),
+                                child: Text(
+                                  "Image not found or not loaded double tap to reload",
+                                  maxLines: 2,
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontSize: 12, color: UI.foreground),
+                                ),
                               ),
-                              child: Image.memory(
-                                controller.imageMain[id]!.value,
-                                fit: BoxFit.fill,
-                              ),
-                            )
-                          : Container())
-                      : Container())
-                  : Container(),
+                            ),
+                          )
+                    : Container(
+                        color: Colors.grey,
+                        child: const Center(
+                          child: Text(
+                            "Loading Image",
+                            style:
+                                TextStyle(fontSize: 12, color: UI.foreground),
+                          ),
+                        ),
+                      ),
+              ),
             ),
           ),
           //Item Information
@@ -421,24 +437,22 @@ class HomeView extends GetView<HomeController> {
                               ),
                               Obx(
                                 () {
-                                  if (controller.distNameOfCampusLength.value >
-                                      0) {
-                                    // if (controller.distNameOfCampus
-                                    //     .containsKey(id)) {
-                                    return Text(
-                                      "${controller.distNameOfCampus[id]}, Jarak: ${controller.dist[id]}",
-                                      style: const TextStyle(
+                                  if (controller.distCheck.value) {
+                                    if (controller.dist.containsKey(id)) {
+                                      return Text(
+                                        "${controller.distNameOfCampus[id]}, Jarak: ${controller.dist[id]}",
+                                        style: const TextStyle(
+                                            fontSize: 11, color: UI.object),
+                                      );
+                                    }
+                                    return const Text(
+                                      "Not found or not loaded",
+                                      style: TextStyle(
                                           fontSize: 11, color: UI.object),
                                     );
-                                    // }
-                                    // return const Text(
-                                    //   "Not Found",
-                                    //   style: TextStyle(
-                                    //       fontSize: 11, color: UI.object),
-                                    // );
                                   } else {
                                     return const Text(
-                                      "Not Found",
+                                      "Loading..",
                                       style: TextStyle(
                                           fontSize: 11, color: UI.object),
                                     );
@@ -453,17 +467,17 @@ class HomeView extends GetView<HomeController> {
                         onTap: () => controller.likeSet(id),
                         child: Obx(
                           () => Icon(
-                            (controller.favoriteLength.value > 0)
+                            (controller.favoriteCheck.value)
                                 ? (controller.favorite.containsKey(id))
-                                    ? (controller.favorite[id]!.value == true)
+                                    ? (controller.favorite[id]! == true)
                                         ? Icons.favorite
                                         : Icons.favorite_outline
                                     : Icons.favorite_outline
                                 : Icons.favorite_outline,
                             size: 23,
-                            color: (controller.favoriteLength.value > 0)
+                            color: (controller.favoriteCheck.value)
                                 ? (controller.favorite.containsKey(id))
-                                    ? (controller.favorite[id]!.value == true)
+                                    ? (controller.favorite[id]! == true)
                                         ? Colors.red
                                         : UI.action
                                     : UI.action
@@ -484,7 +498,6 @@ class HomeView extends GetView<HomeController> {
 
   Container category(title) {
     return Container(
-      // width: ,
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25),

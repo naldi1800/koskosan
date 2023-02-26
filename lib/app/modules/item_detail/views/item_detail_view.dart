@@ -387,7 +387,7 @@ class ItemDetailView extends GetView<ItemDetailController> {
                         ),
                       ),
                       const SizedBox(height: 20),
-
+  
                       // Nearest
                       Container(
                         padding: padding,
