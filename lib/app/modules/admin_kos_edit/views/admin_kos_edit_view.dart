@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -67,6 +68,24 @@ class AdminKosEditView extends GetView<AdminKosEditController> {
             controller.regulation = reg.map((e) => e.toString()).toList();
             controller.regulationL = reg.length.obs;
 
+            //Location
+            GeoPoint geo = d['position'];
+            LatLng position = LatLng(geo.latitude, geo.longitude);
+            controller.locC.text = "${geo.latitude} | ${geo.longitude}";
+
+            controller.marker.value = {
+              Marker(
+                markerId: const MarkerId("pos"),
+                position: position,
+                icon: BitmapDescriptor.defaultMarker,
+                draggable: true,
+                onDrag: (value) => controller.locC.text =
+                    "${value.latitude} | ${value.longitude}",
+                onDragEnd: (value) => controller.locC.text =
+                    "${value.latitude} | ${value.longitude}",
+              ),
+            };
+
             return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -92,9 +111,9 @@ class AdminKosEditView extends GetView<AdminKosEditController> {
                           gestureRecognizers: Set()
                             ..add(Factory<OneSequenceGestureRecognizer>(
                                 () => EagerGestureRecognizer())),
-                          initialCameraPosition: const CameraPosition(
-                            target: LatLng(-5.1404082, 119.4832254),
-                            zoom: 10.0,
+                          initialCameraPosition: CameraPosition(
+                            target: position,
+                            zoom: 18.0,
                           ),
                           markers: controller.marker.value,
                           onMapCreated: (GoogleMapController controllerMap) {

@@ -48,6 +48,14 @@ class AdminCampusEditController extends GetxController {
     locC = TextEditingController(text: "");
     imageC = TextEditingController(text: "");
     mapController = Completer();
+    // marker = Rx<Set<Marker>>(
+    //   {
+    //     const Marker(
+    //       markerId: MarkerId('pos'),
+    //       visible: false,
+    //     ),
+    //   },
+    // );
 
     borderInput = OutlineInputBorder(
       borderRadius: BorderRadius.circular(borderRadius),
@@ -79,7 +87,7 @@ class AdminCampusEditController extends GetxController {
   }
 
   Future getImageFromFirebase(String docID) async {
-    var ref = storage.ref().child("galery").child(docID);
+    var ref = storage.ref().child("campus").child(docID);
     var getAll = await ref.listAll();
     image.value = [];
     getAll.items.forEach((e) async {
@@ -175,39 +183,13 @@ class AdminCampusEditController extends GetxController {
           ),
           backgroundColor: UI.foreground,
           textConfirm: "Oke",
-          onConfirm: () => Get.offAndToNamed(Routes.ADMIN_CAMPUS),
+          onConfirm: () {
+            Get.back();
+            Get.offAndToNamed(Routes.ADMIN_CAMPUS);
+          },
         );
       },
     ).catchError((err) => dialog(msg: "Data gagal disimpan"));
-    // print(id);
-    // if (saves.id == "") {
-    //   dialog(msg: "Data gagal disimpan");
-    // } else {
-    //   var index = 1;
-    //   var id = saves.id;
-    //   await Future.wait(image.value.map(
-    //     (e) async {
-    //       var name = "${index}.jpg";
-    //       index++;
-    //       await storage.ref("campus/$id/$name").putData(e);
-    //     },
-    //   ));
-    //   Get.defaultDialog(
-    //     title: "INFO",
-    //     middleText: "Data berhasil disimpan",
-    //     titleStyle: const TextStyle(
-    //       fontSize: 18,
-    //       color: UI.object,
-    //     ),
-    //     middleTextStyle: const TextStyle(
-    //       fontSize: 18,
-    //       color: UI.object,
-    //     ),
-    //     backgroundColor: UI.foreground,
-    //     textConfirm: "Oke",
-    //     onConfirm: () => Get.offAndToNamed(Routes.ADMIN_CAMPUS),
-    //   );
-    // }
   }
 
   void dialog({required String msg}) {

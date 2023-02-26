@@ -33,9 +33,7 @@ class AdminCampusView extends GetView<AdminCampusController> {
                       Icons.arrow_back,
                       color: UI.action,
                     ),
-                    onPressed: () {
-                      Get.offAndToNamed(Routes.ADMIN_HOME);
-                    },
+                    onPressed: () => Get.offAndToNamed(Routes.ADMIN_HOME),
                   ),
                   const Expanded(
                     child: Text(
@@ -129,7 +127,8 @@ class AdminCampusView extends GetView<AdminCampusController> {
                                   );
                                 },
                               ),
-                              onTap: () => Get.toNamed(Routes.ADMIN_CAMPUS_EDIT, arguments: id),
+                              onTap: () => Get.toNamed(Routes.ADMIN_CAMPUS_EDIT,
+                                  arguments: id),
                             ),
                           ),
                         );

@@ -89,7 +89,7 @@ class AdminCampusAddController extends GetxController {
         imageLength.value = image.value.length;
         // print("ada");
       });
-        imageC.text = "Image loaded";
+      imageC.text = "Image loaded";
       // await Future.delayed(Duration(seconds: 2));
       // print("Cek gambar : $bytes");
     } else {
@@ -101,7 +101,7 @@ class AdminCampusAddController extends GetxController {
     imageLength.value = 0;
     image.value.removeAt(i);
     imageLength.value = image.value.length;
-    if(imageLength.value == 0){
+    if (imageLength.value == 0) {
       imageC.text = "";
     }
   }
@@ -161,7 +161,10 @@ class AdminCampusAddController extends GetxController {
         ),
         backgroundColor: UI.foreground,
         textConfirm: "Oke",
-        onConfirm: () => Get.offAndToNamed(Routes.ADMIN_CAMPUS),
+        onConfirm: () {
+          Get.back();
+          Get.offAndToNamed(Routes.ADMIN_CAMPUS);
+        },
       );
     }
   }

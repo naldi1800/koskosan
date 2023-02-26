@@ -186,6 +186,8 @@ class HomeView extends GetView<HomeController> {
                                       arguments: id,
                                     ),
                                     onDoubleTap: () => controller.likeSet(id),
+                                    onLongPress: () =>
+                                        controller.getDataImage(id),
                                     child: item(
                                       size,
                                       id,

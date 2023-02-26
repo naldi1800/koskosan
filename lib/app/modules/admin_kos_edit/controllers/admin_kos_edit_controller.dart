@@ -207,42 +207,47 @@ class AdminKosEditController extends GetxController {
       "rooms": rooms.map((e) => int.parse(e)).toList(),
       "sizes": sizes,
       "phone": hp,
-    }).then((value) async {
-      var id = Get.arguments;
-      // Delete All Image
-      ListResult deleted =
-          await storage.ref().child("galery").child(id).listAll();
+    }).then(
+      (value) async {
+        var id = Get.arguments;
+        // Delete All Image
+        ListResult deleted =
+            await storage.ref().child("galery").child(id).listAll();
 
-      for (var del in deleted.items) {
-        await del.delete();
-      }
+        for (var del in deleted.items) {
+          await del.delete();
+        }
 
-      // Save
-      var index = 1;
-      await Future.wait(image.value.map(
-        (e) async {
-          var name = "${index}.jpg";
-          index++;
-          await storage.ref("galery/$id/$name").putData(e);
-        },
-      ));
+        // Save
+        var index = 1;
+        await Future.wait(image.value.map(
+          (e) async {
+            var name = "${index}.jpg";
+            index++;
+            await storage.ref("galery/$id/$name").putData(e);
+          },
+        ));
 
-      Get.defaultDialog(
-        title: "INFO",
-        middleText: "Data berhasil disimpan",
-        titleStyle: const TextStyle(
-          fontSize: 18,
-          color: UI.object,
-        ),
-        middleTextStyle: const TextStyle(
-          fontSize: 18,
-          color: UI.object,
-        ),
-        backgroundColor: UI.foreground,
-        textConfirm: "Oke",
-        onConfirm: () => Get.offAndToNamed(Routes.ADMIN_KOS),
-      );
-    }).catchError((err) => dialog(msg: "Data gagal disimpan"));
+        Get.defaultDialog(
+          title: "INFO",
+          middleText: "Data berhasil disimpan",
+          titleStyle: const TextStyle(
+            fontSize: 18,
+            color: UI.object,
+          ),
+          middleTextStyle: const TextStyle(
+            fontSize: 18,
+            color: UI.object,
+          ),
+          backgroundColor: UI.foreground,
+          textConfirm: "Oke",
+          onConfirm: () {
+            Get.back();
+            Get.offAndToNamed(Routes.ADMIN_KOS);
+          },
+        );
+      },
+    ).catchError((err) => dialog(msg: "Data gagal disimpan"));
     // Future.wait()/;
     // print(id);
     // if (saves.) {

@@ -159,25 +159,27 @@ class AdminCampusEditView extends GetView<AdminCampusEditController> {
                                   return Row(
                                     children: [
                                       Stack(
-                                alignment: AlignmentDirectional.topEnd,
-                                // alignment:
-                                children: [
-                                  Image.memory(controller.image.value[i]),
-                                  Container(
-                                    padding: const EdgeInsets.only(
-                                      right: 10,
-                                      top: 10,
-                                    ),
-                                    child: GestureDetector(
-                                      onTap: () => controller.deleteImage(i),
-                                      child: const Icon(
-                                        Icons.close,
-                                        color: Colors.red,
+                                        alignment: AlignmentDirectional.topEnd,
+                                        // alignment:
+                                        children: [
+                                          Image.memory(
+                                              controller.image.value[i]),
+                                          Container(
+                                            padding: const EdgeInsets.only(
+                                              right: 10,
+                                              top: 10,
+                                            ),
+                                            child: GestureDetector(
+                                              onTap: () =>
+                                                  controller.deleteImage(i),
+                                              child: const Icon(
+                                                Icons.close,
+                                                color: Colors.red,
+                                              ),
+                                            ),
+                                          )
+                                        ],
                                       ),
-                                    ),
-                                  )
-                                ],
-                              ),
                                       SizedBox(
                                         width: 5,
                                       ),

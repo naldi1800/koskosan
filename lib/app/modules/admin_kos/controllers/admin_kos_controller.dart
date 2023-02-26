@@ -15,9 +15,21 @@ class AdminKosController extends GetxController {
 
   void delete(String docID) async {
     var get = firestore.collection("boardings").doc(docID);
-    print("tes");
+    var img = storage.ref().child("galery").child(docID);
+    ListResult res = await img.listAll();
+
+    for (var r in res.items) {
+      // print(r);
+      await r.delete();
+    }
+    try {
+      await img.delete();
+    } catch (e) {
+      print("ERROR : $e");
+    }
+
     Get.back();
-    var x = await get.delete();
+    await get.delete();
     Get.defaultDialog(
       title: "Info",
       middleText: "Delete success",

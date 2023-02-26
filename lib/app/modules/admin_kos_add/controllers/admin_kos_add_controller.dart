@@ -225,7 +225,10 @@ class AdminKosAddController extends GetxController {
         ),
         backgroundColor: UI.foreground,
         textConfirm: "Oke",
-        onConfirm: () => Get.offAndToNamed(Routes.ADMIN_KOS),
+        onConfirm: () {
+          Get.back();
+          Get.offAndToNamed(Routes.ADMIN_KOS);
+        },
       );
     }
   }
