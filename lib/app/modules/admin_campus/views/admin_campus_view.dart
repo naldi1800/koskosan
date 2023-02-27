@@ -17,6 +17,7 @@ class AdminCampusView extends GetView<AdminCampusController> {
       //   backgroundColor: UI.foreground,
       // ),
       backgroundColor: UI.background,
+      
       body: SafeArea(
         child: Column(
           children: [
