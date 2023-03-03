@@ -25,8 +25,8 @@ class ItemDetailController extends GetxController {
   var box = GetStorage('USER_SETTINGS');
   var favorite = false.obs;
 
-  Future<QuerySnapshot<Object?>> getDataWithID(String docID) {
-    var get = firestore.collection("boardings");
+  Future<DocumentSnapshot<Map<String, dynamic>>> getDataWithID(String docID) {
+    var get = firestore.collection("boardings").doc(docID);
     return get.get();
   }
 

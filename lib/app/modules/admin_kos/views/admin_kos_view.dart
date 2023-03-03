@@ -34,7 +34,7 @@ class AdminKosView extends GetView<AdminKosController> {
                       color: UI.action,
                     ),
                     onPressed: () {
-                      Get.offAndToNamed(Routes.ADMIN_HOME);
+                      Get.offAllNamed(Routes.ADMIN_HOME);
                     },
                   ),
                   const Expanded(

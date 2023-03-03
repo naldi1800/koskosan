@@ -17,7 +17,7 @@ class AdminCampusView extends GetView<AdminCampusController> {
       //   backgroundColor: UI.foreground,
       // ),
       backgroundColor: UI.background,
-      
+
       body: SafeArea(
         child: Column(
           children: [
@@ -34,7 +34,7 @@ class AdminCampusView extends GetView<AdminCampusController> {
                       Icons.arrow_back,
                       color: UI.action,
                     ),
-                    onPressed: () => Get.offAndToNamed(Routes.ADMIN_HOME),
+                    onPressed: () => Get.offAllNamed(Routes.ADMIN_HOME),
                   ),
                   const Expanded(
                     child: Text(

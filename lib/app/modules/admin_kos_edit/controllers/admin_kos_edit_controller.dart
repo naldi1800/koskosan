@@ -25,6 +25,7 @@ class AdminKosEditController extends GetxController {
   late TextEditingController regulationC;
   late TextEditingController facilityC;
   late TextEditingController facilityUC;
+  late TextEditingController controlEdit;
 
   late Completer<GoogleMapController> mapController;
 
@@ -80,6 +81,7 @@ class AdminKosEditController extends GetxController {
     regulationC = TextEditingController(text: "");
     facilityC = TextEditingController(text: "");
     facilityUC = TextEditingController(text: "");
+    controlEdit = TextEditingController(text: "");
 
     mapController = Completer();
 
@@ -112,6 +114,7 @@ class AdminKosEditController extends GetxController {
     regulationC.dispose();
     facilityC.dispose();
     facilityUC.dispose();
+    controlEdit.dispose();
   }
 
   Future<DocumentSnapshot<Map<String, dynamic>>> getData(String docID) async {
@@ -182,6 +185,14 @@ class AdminKosEditController extends GetxController {
         facilityU.isEmpty ||
         price.isEmpty;
 
+    if (rooms.length != price.length ||
+        rooms.length != sizes.length ||
+        sizes.length != price.length) {
+      dialog(
+          msg: "Ada ketidaksamaan antar Jumlah (Kamar, Harga dan Size kamar)");
+      return;
+    }
+
     if (res || res2) {
       dialog(msg: "Semua harus di isi");
       return;
@@ -236,7 +247,7 @@ class AdminKosEditController extends GetxController {
             color: UI.object,
           ),
           middleTextStyle: const TextStyle(
-            fontSize: 18,
+            fontSize: 15,
             color: UI.object,
           ),
           backgroundColor: UI.foreground,
@@ -293,7 +304,7 @@ class AdminKosEditController extends GetxController {
         color: UI.object,
       ),
       middleTextStyle: const TextStyle(
-        fontSize: 18,
+        fontSize: 15,
         color: UI.object,
       ),
       backgroundColor: UI.foreground,

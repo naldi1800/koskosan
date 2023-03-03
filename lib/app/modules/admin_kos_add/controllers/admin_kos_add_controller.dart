@@ -165,6 +165,14 @@ class AdminKosAddController extends GetxController {
         facilityU.isEmpty ||
         price.isEmpty;
 
+    if (rooms.length != price.length ||
+        rooms.length != sizes.length ||
+        sizes.length != price.length) {
+      dialog(
+          msg: "Ada ketidaksamaan antar Jumlah (Kamar, Harga dan Size kamar)");
+      return;
+    }
+
     if (res || res2) {
       dialog(msg: "Semua harus di isi");
       return;
@@ -186,6 +194,7 @@ class AdminKosAddController extends GetxController {
       lat,
       long,
     );
+
     var saves = await campus.add({
       "name": name,
       "description": desc,

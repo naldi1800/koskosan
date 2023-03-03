@@ -237,8 +237,13 @@ class AdminKosAddView extends GetView<AdminKosAddController> {
       ),
     );
   }
-
-  Padding formInputWithChild(RxInt lengthC, List<String> list) {
+  Padding formInputWithChild(RxInt lengthC, List<String> list,
+      {bool editable = false, String? title}) {
+    TextEditingController control = TextEditingController(text: "");
+    if (editable == true && title == null) {
+      throw ArgumentError(
+          'Parameter "control" dan "title" wajib diisi ketika parameter "edit" bernilai true.');
+    } else {}
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Obx(
@@ -272,12 +277,64 @@ class AdminKosAddView extends GetView<AdminKosAddController> {
                                     fontSize: 14,
                                   ),
                                 ),
+                                (editable)
+                                    ? const SizedBox(width: 3)
+                                    : const SizedBox(width: 3),
+                                (editable)
+                                    ? GestureDetector(
+                                        onTap: () {
+                                          Get.defaultDialog(
+                                            actions: [
+                                              formForEditItem(control, title),
+                                            ],
+                                            backgroundColor: UI.background,
+                                            title: "Edit",
+                                            middleText:
+                                                "Anda ingin mengedit item '${list[index]}'?",
+                                            titleStyle: const TextStyle(
+                                              fontSize: 18,
+                                              color: UI.object,
+                                            ),
+                                            middleTextStyle: const TextStyle(
+                                              fontSize: 15,
+                                              color: UI.object,
+                                            ),
+                                            textConfirm: "Edit",
+                                            textCancel: "Cancel",
+                                            onConfirm: () {
+                                              if (control.text == "") {
+                                                Get.back();
+                                                return;
+                                              }
+                                             lengthC.value = 0;
+                                              list[index] = control.text;
+                                              lengthC.value = list.length;
+                                              Get.back();
+                                            },
+                                          );
+                                        },
+                                        child: const Icon(
+                                          Icons.edit,
+                                          color: Colors.blue,
+                                          size: 15,
+                                        ),
+                                      )
+                                    : const SizedBox(),
                                 const SizedBox(width: 3),
                                 GestureDetector(
                                   onTap: () {
                                     Get.defaultDialog(
+                                      backgroundColor: UI.background,
                                       title: "Warning!!!",
                                       middleText: "Delete '${list[index]}' ?",
+                                      titleStyle: const TextStyle(
+                                        fontSize: 18,
+                                        color: UI.object,
+                                      ),
+                                      middleTextStyle: const TextStyle(
+                                        fontSize: 15,
+                                        color: UI.object,
+                                      ),
                                       textConfirm: "Delete",
                                       textCancel: "Cancel",
                                       onConfirm: () {
@@ -286,7 +343,7 @@ class AdminKosAddView extends GetView<AdminKosAddController> {
                                         Get.back();
                                         print("List : $list");
                                       },
-                                      onCancel: () => Get.back(),
+                                      // onCancel: () => Get.back(),
                                     );
                                   },
                                   child: const Icon(
@@ -310,8 +367,38 @@ class AdminKosAddView extends GetView<AdminKosAddController> {
     );
   }
 
+  TextFormField formForEditItem(TextEditingController? control, String? title) {
+    return TextFormField(
+      controller: control,
+      style: TextStyle(
+        fontSize: controller.fontSize,
+        color: UI.object,
+      ),
+      keyboardType: TextInputType.multiline,
+      maxLines: null,
+      decoration: InputDecoration(
+        border: controller.borderInput,
+        errorBorder: controller.borderInputError,
+        enabledBorder: controller.borderInput,
+        focusedBorder: controller.borderInputSuccess,
+        filled: true,
+        fillColor: UI.foreground,
+        labelText: title,
+        labelStyle: TextStyle(
+          fontSize: controller.fontSize,
+          color: UI.action,
+        ),
+      ),
+    );
+  }
+
   Padding formInputWith(
-      TextEditingController control, RxInt lengthC, List<String> list, title) {
+      TextEditingController control, RxInt lengthC, List<String> list, title,
+      {bool edit = false, int? index}) {
+    if (edit == true && index == null) {
+      throw ArgumentError(
+          'Parameter "index" wajib diisi ketika parameter "edit" bernilai true.');
+    } 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
@@ -345,7 +432,9 @@ class AdminKosAddView extends GetView<AdminKosAddController> {
           IconButton(
             onPressed: () {
               var cat = control.text;
-              if (cat == "") return;
+              if (cat == "") {
+                return;
+              }
               list.add(cat);
               lengthC.value = list.length;
               control.text = "";
@@ -359,78 +448,6 @@ class AdminKosAddView extends GetView<AdminKosAddController> {
       ),
     );
   }
-
-  // Padding formInputWithChild() {
-  //   return Padding(
-  //     padding: const EdgeInsets.symmetric(horizontal: 20),
-  //     child: Column(
-  //       mainAxisSize: MainAxisSize.min,
-  //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-  //       children: [
-  //         Row(
-  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //           children: [
-  //             Expanded(
-  //               child: TextFormField(
-  //                 controller: controller.categoryC,
-  //                 style: TextStyle(
-  //                   fontSize: controller.fontSize,
-  //                   color: UI.object,
-  //                 ),
-  //                 keyboardType: TextInputType.multiline,
-  //                 maxLines: null,
-  //                 decoration: InputDecoration(
-  //                   border: controller.borderInput,
-  //                   errorBorder: controller.borderInputError,
-  //                   enabledBorder: controller.borderInput,
-  //                   focusedBorder: controller.borderInputSuccess,
-  //                   filled: true,
-  //                   fillColor: UI.foreground,
-  //                   labelText: "Image",
-  //                   labelStyle: TextStyle(
-  //                     fontSize: controller.fontSize,
-  //                     color: UI.action,
-  //                   ),
-  //                 ),
-  //               ),
-  //             ),
-  //             const SizedBox(width: 5),
-  //             IconButton(
-  //               onPressed: () {
-  //                 var cat = controller.categoryC.text;
-  //                 controller.category.add(cat);
-  //                 controller.categoryL.value = controller.category.length;
-  //                 controller.categoryC.text = "";
-  //               },
-  //               icon: const Icon(
-  //                 Icons.add,
-  //                 color: UI.action,
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //         Obx(
-  //           () => ListView(
-  //             scrollDirection: Axis.horizontal,
-  //             children: (controller.categoryL.value > 0)
-  //                 ? List.generate(
-  //                     controller.category.length,
-  //                     (index) {
-  //                       return Row(
-  //                         children: [
-  //                           Text(controller.category[index]),
-  //                           const SizedBox(width: 5),
-  //                         ],
-  //                       );
-  //                     },
-  //                   )
-  //                 : [],
-  //           ),
-  //         )
-  //       ],
-  //     ),
-  //   );
-  // }
 
   Padding formInput(String title, TextEditingController c, {disabled = true}) {
     return Padding(
@@ -458,4 +475,5 @@ class AdminKosAddView extends GetView<AdminKosAddController> {
       ),
     );
   }
+
 }

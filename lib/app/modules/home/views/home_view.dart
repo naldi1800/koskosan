@@ -181,10 +181,14 @@ class HomeView extends GetView<HomeController> {
                                   var id = dataItems[index].id;
                                   var size = MediaQuery.of(context).size;
                                   return GestureDetector(
-                                    onTap: () => Get.toNamed(
-                                      Routes.ITEM_DETAIL,
-                                      arguments: id,
-                                    ),
+                                    onTap: () {
+                                      print("CEK : ${dataItems[index].id}");
+                                      // return;
+                                      Get.toNamed(
+                                        Routes.ITEM_DETAIL,
+                                        arguments: dataItems[index].id,
+                                      );
+                                    },
                                     onDoubleTap: () => controller.likeSet(id),
                                     onLongPress: () =>
                                         controller.getDataImage(id),
@@ -338,7 +342,7 @@ class HomeView extends GetView<HomeController> {
                               child: Padding(
                                 padding: EdgeInsets.all(15),
                                 child: Text(
-                                  "Image not found or not loaded double tap to reload",
+                                  "Image not found or not loaded long press to reload",
                                   maxLines: 2,
                                   textAlign: TextAlign.center,
                                   overflow: TextOverflow.ellipsis,
@@ -419,6 +423,8 @@ class HomeView extends GetView<HomeController> {
                   //Item Name
                   Text(
                     data['name'].toString(),
+                    maxLines: 2,
+                    overflow: TextOverflow.visible,
                     style: const TextStyle(
                       color: UI.object,
                       fontSize: 15,

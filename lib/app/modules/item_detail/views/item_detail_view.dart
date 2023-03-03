@@ -26,11 +26,11 @@ class ItemDetailView extends GetView<ItemDetailController> {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 // print(snapshot.hasData);
-                var getData = snapshot.data!.docs;
+                var getData = snapshot.data;
                 // if (getData.isEmpty) {
                 //   return const Center(child: CircularProgressIndicator());
                 // }
-                var data = getData[0].data() as Map<String, dynamic>;
+                var data = getData!.data() as Map<String, dynamic>;
                 // print(data['categorys']);
                 var rooms = data['rooms'].reduce((v, e) => v + e);
                 var publicFacility = data['publicfacilitys'];
@@ -149,7 +149,7 @@ class ItemDetailView extends GetView<ItemDetailController> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              specificationsItem(Icons.bed, "$rooms Roomsa"),
+                              specificationsItem(Icons.bed, "$rooms Rooms"),
                               const SizedBox(width: 10),
                               specificationsItem(Icons.local_parking, parking),
                               const SizedBox(width: 10),
@@ -631,7 +631,7 @@ class ItemDetailView extends GetView<ItemDetailController> {
                       } else if (Get.parameters['in'] == "Maps") {
                         Get.offAndToNamed(
                           Routes.MAPS_CAMPUS,
-                          arguments: Get.parameters['in'],
+                          arguments: Get.parameters['id'] ,
                         );
                       }
                     },

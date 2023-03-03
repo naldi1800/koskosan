@@ -71,7 +71,8 @@ class MapsCampusController extends GetxController {
                     Routes.ITEM_DETAIL,
                     arguments: e.id,
                     parameters: {
-                      "in": id,
+                      "in": "Maps",
+                      "id": Get.arguments,
                     },
                   ),
                 ),
